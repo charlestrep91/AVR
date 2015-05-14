@@ -16,7 +16,7 @@
 
 
 
-void dbgSendString(U8 *buf)
+void dbgSendDbgString(U8 *buf)
 {	
 		//SEND START BYTE
 		uartSendByte(0xFE);

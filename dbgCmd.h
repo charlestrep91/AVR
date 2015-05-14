@@ -18,7 +18,7 @@
     par NULL (string)
 	ARG U8 *buf ptr sur le début de la string
 */
-void dbgSendString(U8 *buf);
+void dbgSendDbgString(U8 *buf);
 
 /*
 	envoi une chaine de caractère qui doit se terminer 

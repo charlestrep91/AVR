@@ -222,8 +222,8 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a
                 0x000002e0                uartGetTxSize
                 0x0000019c                uartSendString
  .text          0x0000039a       0x68 dbgCmd.o
+                0x0000039a                dbgSendDbgString
                 0x000003ce                dbgSendRobotString
-                0x0000039a                dbgSendString
  .text          0x00000402      0x120 cmdParser.o
                 0x00000402                cPMainCmdParser
  .text          0x00000522       0x1c hardware.o
@@ -385,18 +385,18 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a
                 0x00000080       0x20 hardware.o
 
 .debug_pubnames
-                0x00000000      0x232
+                0x00000000      0x235
  *(.debug_pubnames)
  .debug_pubnames
                 0x00000000       0x1b main.o
  .debug_pubnames
                 0x0000001b      0x151 uart.o
  .debug_pubnames
-                0x0000016c       0x3b dbgCmd.o
+                0x0000016c       0x3e dbgCmd.o
  .debug_pubnames
-                0x000001a7       0x6e cmdParser.o
+                0x000001aa       0x6e cmdParser.o
  .debug_pubnames
-                0x00000215       0x1d hardware.o
+                0x00000218       0x1d hardware.o
 
 .debug_info     0x00000000      0x4c3
  *(.debug_info)
@@ -431,17 +431,17 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a
  .debug_frame   0x00000110       0x20 cmdParser.o
  .debug_frame   0x00000130       0x20 hardware.o
 
-.debug_str      0x00000000      0x266
+.debug_str      0x00000000      0x269
  *(.debug_str)
  .debug_str     0x00000000       0x62 main.o
                                  0x96 (size before relaxing)
  .debug_str     0x00000062      0x114 uart.o
                                 0x19b (size before relaxing)
- .debug_str     0x00000176       0x2d dbgCmd.o
-                                 0xb4 (size before relaxing)
- .debug_str     0x000001a3       0xae cmdParser.o
+ .debug_str     0x00000176       0x30 dbgCmd.o
+                                 0xb7 (size before relaxing)
+ .debug_str     0x000001a6       0xae cmdParser.o
                                 0x135 (size before relaxing)
- .debug_str     0x00000251       0x15 hardware.o
+ .debug_str     0x00000254       0x15 hardware.o
                                  0x9c (size before relaxing)
 
 .debug_loc

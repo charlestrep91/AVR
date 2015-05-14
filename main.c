@@ -1,9 +1,7 @@
 /*
  ELE542 
-
  Jonathan Lapointe LAPJ05108303
  Charles Trépanier 
-
 
 */
 

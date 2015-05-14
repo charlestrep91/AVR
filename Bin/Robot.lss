@@ -11,17 +11,17 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   3 .debug_aranges 000000a0  00000000  00000000  000005f6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_pubnames 00000232  00000000  00000000  00000696  2**0
+  4 .debug_pubnames 00000235  00000000  00000000  00000696  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000004c3  00000000  00000000  000008c8  2**0
+  5 .debug_info   000004c3  00000000  00000000  000008cb  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 0000023e  00000000  00000000  00000d8b  2**0
+  6 .debug_abbrev 0000023e  00000000  00000000  00000d8e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000056b  00000000  00000000  00000fc9  2**0
+  7 .debug_line   0000056b  00000000  00000000  00000fcc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000150  00000000  00000000  00001534  2**2
+  8 .debug_frame  00000150  00000000  00000000  00001538  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000266  00000000  00000000  00001684  2**0
+  9 .debug_str    00000269  00000000  00000000  00001688  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -633,16 +633,16 @@ SIGNAL(SIG_UART_RECV)
  396:	1f 90       	pop	r1
  398:	18 95       	reti
 
-0000039a <dbgSendString>:
+0000039a <dbgSendDbgString>:
 
 
 
 
-void dbgSendString(U8 *buf)
+void dbgSendDbgString(U8 *buf)
 {	
  39a:	df 93       	push	r29
  39c:	cf 93       	push	r28
- 39e:	00 d0       	rcall	.+0      	; 0x3a0 <dbgSendString+0x6>
+ 39e:	00 d0       	rcall	.+0      	; 0x3a0 <dbgSendDbgString+0x6>
  3a0:	cd b7       	in	r28, 0x3d	; 61
  3a2:	de b7       	in	r29, 0x3e	; 62
  3a4:	9a 83       	std	Y+2, r25	; 0x02
@@ -803,10 +803,10 @@ void cPMainCmdParser(void)
  4a4:	80 91 84 00 	lds	r24, 0x0084
  4a8:	88 23       	and	r24, r24
  4aa:	21 f4       	brne	.+8      	; 0x4b4 <cPMainCmdParser+0xb2>
-					dbgSendString("vitesse=0");
+					dbgSendDbgString("vitesse=0");
  4ac:	86 e7       	ldi	r24, 0x76	; 118
  4ae:	90 e0       	ldi	r25, 0x00	; 0
- 4b0:	0e 94 cd 01 	call	0x39a	; 0x39a <dbgSendString>
+ 4b0:	0e 94 cd 01 	call	0x39a	; 0x39a <dbgSendDbgString>
 
 				cPVitesseValue=data;
  4b4:	80 91 84 00 	lds	r24, 0x0084
@@ -849,7 +849,7 @@ void cPMainCmdParser(void)
 
 				cPState=CP_SYNC_STATE;
  4f4:	10 92 80 00 	sts	0x0080, r1
-			//	dbgSendString("arret");
+			//	dbgSendDbgString("arret");
 				PORTB=0x55;
  4f8:	e8 e3       	ldi	r30, 0x38	; 56
  4fa:	f0 e0       	ldi	r31, 0x00	; 0
@@ -863,7 +863,7 @@ void cPMainCmdParser(void)
 
 				cPState=CP_SYNC_STATE;
  502:	10 92 80 00 	sts	0x0080, r1
-			//	dbgSendString("run");
+			//	dbgSendDbgString("run");
 				PORTB=~cPAngleValue;
  506:	e8 e3       	ldi	r30, 0x38	; 56
  508:	f0 e0       	ldi	r31, 0x00	; 0

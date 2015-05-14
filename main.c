@@ -25,9 +25,8 @@ uartInit();
 for(;;)
 {
 
-		dbgSendString("allo debugdebug");
-	for(i=0;i<0xffff;i++);
-	
+	//dbgSendString("allo debugdebug");
+	cPMainCmdParser();
 }
 
 

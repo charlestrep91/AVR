@@ -22,3 +22,4 @@ void dbgSendString(U8 *buf)
 		uartSendString(buf);
 		uartSendByte(0xFF);
 }
+

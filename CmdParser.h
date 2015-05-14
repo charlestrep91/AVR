@@ -21,7 +21,7 @@
 
 
 
-
+void cPMainCmdParser(void);
 
 
 

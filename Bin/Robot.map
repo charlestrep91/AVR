@@ -17,7 +17,10 @@ uartRxSize          0x1               uart.o
 uartTxSize          0x1               uart.o
 uartRxInPtr         0x1               uart.o
 uartTxOutPtr        0x1               uart.o
+cPVitesseValue      0x1               cmdParser.o
+cPAngleValue        0x1               cmdParser.o
 uartTxBuffer        0x3c              uart.o
+cPCmdValue          0x1               cmdParser.o
 
 Memory Configuration
 
@@ -36,6 +39,7 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr5/crtm32
 LOAD main.o
 LOAD uart.o
 LOAD dbgCmd.o
+LOAD cmdParser.o
 LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a
 LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr5\libc.a
 LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a
@@ -130,7 +134,7 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x40c
+.text           0x00000000      0x4a6
  *(.vectors)
  .vectors       0x00000000       0x54 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr5/crtm32.o
                 0x00000000                __vectors
@@ -205,35 +209,37 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a
                 0x0000008e                __vector_16
                 0x0000008e                __vector_18
                 0x0000008e                __vector_20
- .text          0x00000092       0x5c main.o
+ .text          0x00000092       0x20 main.o
                 0x00000092                main
- .text          0x000000ee      0x2ee uart.o
-                0x00000144                uartTxRoutine
-                0x00000262                uartSendByte
-                0x00000310                uartGetRxSize
-                0x000000ee                uartInitBuffers
-                0x00000388                __vector_13
-                0x0000019a                uartRxRoutine
-                0x00000114                uartInit
-                0x000002b6                uartGetByte
-                0x00000334                __vector_15
-                0x00000322                uartGetTxSize
-                0x000001de                uartSendString
- .text          0x000003dc       0x2c dbgCmd.o
-                0x000003dc                dbgSendString
- .text          0x00000408        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_exit.o)
- .text          0x00000408        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_copy_data.o)
- .text          0x00000408        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_clear_bss.o)
-                0x00000408                . = ALIGN (0x2)
+ .text          0x000000b2      0x2ee uart.o
+                0x00000108                uartTxRoutine
+                0x00000226                uartSendByte
+                0x000002d4                uartGetRxSize
+                0x000000b2                uartInitBuffers
+                0x0000034c                __vector_13
+                0x0000015e                uartRxRoutine
+                0x000000d8                uartInit
+                0x0000027a                uartGetByte
+                0x000002f8                __vector_15
+                0x000002e6                uartGetTxSize
+                0x000001a2                uartSendString
+ .text          0x000003a0       0x2c dbgCmd.o
+                0x000003a0                dbgSendString
+ .text          0x000003cc       0xd6 cmdParser.o
+                0x000003cc                cPMainCmdParser
+ .text          0x000004a2        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_exit.o)
+ .text          0x000004a2        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_copy_data.o)
+ .text          0x000004a2        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_clear_bss.o)
+                0x000004a2                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x00000408        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_exit.o)
- .text.libgcc   0x00000408        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_copy_data.o)
- .text.libgcc   0x00000408        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_clear_bss.o)
-                0x00000408                . = ALIGN (0x2)
+ .text.libgcc   0x000004a2        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_exit.o)
+ .text.libgcc   0x000004a2        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_copy_data.o)
+ .text.libgcc   0x000004a2        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_clear_bss.o)
+                0x000004a2                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000408        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_exit.o)
-                0x00000408                exit
-                0x00000408                _exit
+ .fini9         0x000004a2        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_exit.o)
+                0x000004a2                exit
+                0x000004a2                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -252,59 +258,66 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000408        0x4 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_exit.o)
+ .fini0         0x000004a2        0x4 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x0000040c                _etext = .
+                0x000004a6                _etext = .
 
-.data           0x00800060       0x10 load address 0x0000040c
+.data           0x00800060        0x0 load address 0x000004a6
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800060        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr5/crtm32.o
- .data          0x00800060       0x10 main.o
- .data          0x00800070        0x0 uart.o
- .data          0x00800070        0x0 dbgCmd.o
- .data          0x00800070        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_exit.o)
- .data          0x00800070        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_copy_data.o)
- .data          0x00800070        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_clear_bss.o)
+ .data          0x00800060        0x0 main.o
+ .data          0x00800060        0x0 uart.o
+ .data          0x00800060        0x0 dbgCmd.o
+ .data          0x00800060        0x0 cmdParser.o
+ .data          0x00800060        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_exit.o)
+ .data          0x00800060        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_copy_data.o)
+ .data          0x00800060        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_clear_bss.o)
  *(.data*)
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.d*)
-                0x00800070                . = ALIGN (0x2)
-                0x00800070                _edata = .
-                0x00800070                PROVIDE (__data_end, .)
+                0x00800060                . = ALIGN (0x2)
+                0x00800060                _edata = .
+                0x00800060                PROVIDE (__data_end, .)
 
-.bss            0x00800070       0x7e
-                0x00800070                PROVIDE (__bss_start, .)
+.bss            0x00800060       0x82
+                0x00800060                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x00800070        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr5/crtm32.o
- .bss           0x00800070        0x0 main.o
- .bss           0x00800070        0x0 uart.o
- .bss           0x00800070        0x0 dbgCmd.o
- .bss           0x00800070        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_exit.o)
- .bss           0x00800070        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_copy_data.o)
- .bss           0x00800070        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_clear_bss.o)
+ .bss           0x00800060        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr5/crtm32.o
+ .bss           0x00800060        0x0 main.o
+ .bss           0x00800060        0x0 uart.o
+ .bss           0x00800060        0x0 dbgCmd.o
+ .bss           0x00800060        0x1 cmdParser.o
+                0x00800060                cPState
+ .bss           0x00800061        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_exit.o)
+ .bss           0x00800061        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_copy_data.o)
+ .bss           0x00800061        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a(_clear_bss.o)
  *(.bss*)
  *(COMMON)
- COMMON         0x00800070       0x7e uart.o
-                0x00800070                uartTxInPtr
-                0x00800071                uartRxOutPtr
-                0x00800072                uartRxBuffer
-                0x008000ae                uartRxSize
-                0x008000af                uartTxSize
-                0x008000b0                uartRxInPtr
-                0x008000b1                uartTxOutPtr
-                0x008000b2                uartTxBuffer
-                0x008000ee                PROVIDE (__bss_end, .)
-                0x0000040c                __data_load_start = LOADADDR (.data)
-                0x0000041c                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800061       0x7e uart.o
+                0x00800061                uartTxInPtr
+                0x00800062                uartRxOutPtr
+                0x00800063                uartRxBuffer
+                0x0080009f                uartRxSize
+                0x008000a0                uartTxSize
+                0x008000a1                uartRxInPtr
+                0x008000a2                uartTxOutPtr
+                0x008000a3                uartTxBuffer
+ COMMON         0x008000df        0x3 cmdParser.o
+                0x008000df                cPVitesseValue
+                0x008000e0                cPAngleValue
+                0x008000e1                cPCmdValue
+                0x008000e2                PROVIDE (__bss_end, .)
+                0x000004a6                __data_load_start = LOADADDR (.data)
+                0x000004a6                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x008000ee        0x0
-                0x008000ee                PROVIDE (__noinit_start, .)
+.noinit         0x008000e2        0x0
+                0x008000e2                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x008000ee                PROVIDE (__noinit_end, .)
-                0x008000ee                _end = .
-                0x008000ee                PROVIDE (__heap_start, .)
+                0x008000e2                PROVIDE (__noinit_end, .)
+                0x008000e2                _end = .
+                0x008000e2                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -355,7 +368,7 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0x60
+.debug_aranges  0x00000000       0x80
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x20 main.o
@@ -363,9 +376,11 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a
                 0x00000020       0x20 uart.o
  .debug_aranges
                 0x00000040       0x20 dbgCmd.o
+ .debug_aranges
+                0x00000060       0x20 cmdParser.o
 
 .debug_pubnames
-                0x00000000      0x190
+                0x00000000      0x1f5
  *(.debug_pubnames)
  .debug_pubnames
                 0x00000000       0x1b main.o
@@ -373,33 +388,39 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a
                 0x0000001b      0x151 uart.o
  .debug_pubnames
                 0x0000016c       0x24 dbgCmd.o
+ .debug_pubnames
+                0x00000190       0x65 cmdParser.o
 
-.debug_info     0x00000000      0x344
+.debug_info     0x00000000      0x43c
  *(.debug_info)
  .debug_info    0x00000000       0x83 main.o
  .debug_info    0x00000083      0x236 uart.o
  .debug_info    0x000002b9       0x8b dbgCmd.o
+ .debug_info    0x00000344       0xf8 cmdParser.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000      0x191
+.debug_abbrev   0x00000000      0x20a
  *(.debug_abbrev)
  .debug_abbrev  0x00000000       0x50 main.o
  .debug_abbrev  0x00000050       0xe8 uart.o
  .debug_abbrev  0x00000138       0x59 dbgCmd.o
+ .debug_abbrev  0x00000191       0x79 cmdParser.o
 
-.debug_line     0x00000000      0x3b6
+.debug_line     0x00000000      0x4b1
  *(.debug_line)
- .debug_line    0x00000000       0x7e main.o
- .debug_line    0x0000007e      0x2c0 uart.o
- .debug_line    0x0000033e       0x78 dbgCmd.o
+ .debug_line    0x00000000       0x76 main.o
+ .debug_line    0x00000076      0x2c0 uart.o
+ .debug_line    0x00000336       0x78 dbgCmd.o
+ .debug_line    0x000003ae      0x103 cmdParser.o
 
-.debug_frame    0x00000000      0x100
+.debug_frame    0x00000000      0x120
  *(.debug_frame)
  .debug_frame   0x00000000       0x20 main.o
  .debug_frame   0x00000020       0xc0 uart.o
  .debug_frame   0x000000e0       0x20 dbgCmd.o
+ .debug_frame   0x00000100       0x20 cmdParser.o
 
-.debug_str      0x00000000      0x190
+.debug_str      0x00000000      0x23f
  *(.debug_str)
  .debug_str     0x00000000       0x62 main.o
                                  0x96 (size before relaxing)
@@ -407,6 +428,8 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr5\libgcc.a
                                 0x19b (size before relaxing)
  .debug_str     0x00000176       0x1a dbgCmd.o
                                  0xa1 (size before relaxing)
+ .debug_str     0x00000190       0xaf cmdParser.o
+                                0x136 (size before relaxing)
 
 .debug_loc
  *(.debug_loc)

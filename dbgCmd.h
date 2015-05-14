@@ -20,5 +20,12 @@
 */
 void dbgSendString(U8 *buf);
 
+/*
+	envoi une chaine de caractère qui doit se terminer 
+    par NULL (string)
+	ARG U8 *buf ptr sur le début de la string
+*/
+void dbgSendRobotString(U8 *buf);
+
 
 #endif		

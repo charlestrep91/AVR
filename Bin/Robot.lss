@@ -3,25 +3,25 @@ Robot.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000004e0  00000000  00000000  00000094  2**1
+  0 .text         00000542  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         0000001a  00800060  000004e0  00000574  2**0
+  1 .data         00000020  00800060  00000542  000005d6  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000083  0080007a  0080007a  0000058e  2**0
+  2 .bss          00000083  00800080  00800080  000005f6  2**0
                   ALLOC
-  3 .debug_aranges 000000a0  00000000  00000000  0000058e  2**0
+  3 .debug_aranges 000000a0  00000000  00000000  000005f6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_pubnames 0000021b  00000000  00000000  0000062e  2**0
+  4 .debug_pubnames 00000232  00000000  00000000  00000696  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000004af  00000000  00000000  00000849  2**0
+  5 .debug_info   000004c3  00000000  00000000  000008c8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000237  00000000  00000000  00000cf8  2**0
+  6 .debug_abbrev 0000023e  00000000  00000000  00000d8b  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000051b  00000000  00000000  00000f2f  2**0
+  7 .debug_line   0000056b  00000000  00000000  00000fc9  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000140  00000000  00000000  0000144c  2**2
+  8 .debug_frame  00000150  00000000  00000000  00001534  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000254  00000000  00000000  0000158c  2**0
+  9 .debug_str    00000266  00000000  00000000  00001684  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -61,8 +61,8 @@ Disassembly of section .text:
   60:	10 e0       	ldi	r17, 0x00	; 0
   62:	a0 e6       	ldi	r26, 0x60	; 96
   64:	b0 e0       	ldi	r27, 0x00	; 0
-  66:	e0 ee       	ldi	r30, 0xE0	; 224
-  68:	f4 e0       	ldi	r31, 0x04	; 4
+  66:	e2 e4       	ldi	r30, 0x42	; 66
+  68:	f5 e0       	ldi	r31, 0x05	; 5
   6a:	02 c0       	rjmp	.+4      	; 0x70 <.do_copy_data_start>
 
 0000006c <.do_copy_data_loop>:
@@ -70,13 +70,13 @@ Disassembly of section .text:
   6e:	0d 92       	st	X+, r0
 
 00000070 <.do_copy_data_start>:
-  70:	aa 37       	cpi	r26, 0x7A	; 122
+  70:	a0 38       	cpi	r26, 0x80	; 128
   72:	b1 07       	cpc	r27, r17
   74:	d9 f7       	brne	.-10     	; 0x6c <.do_copy_data_loop>
 
 00000076 <__do_clear_bss>:
-  76:	10 e0       	ldi	r17, 0x00	; 0
-  78:	aa e7       	ldi	r26, 0x7A	; 122
+  76:	11 e0       	ldi	r17, 0x01	; 1
+  78:	a0 e8       	ldi	r26, 0x80	; 128
   7a:	b0 e0       	ldi	r27, 0x00	; 0
   7c:	01 c0       	rjmp	.+2      	; 0x80 <.do_clear_bss_start>
 
@@ -84,11 +84,11 @@ Disassembly of section .text:
   7e:	1d 92       	st	X+, r1
 
 00000080 <.do_clear_bss_start>:
-  80:	ad 3f       	cpi	r26, 0xFD	; 253
+  80:	a3 30       	cpi	r26, 0x03	; 3
   82:	b1 07       	cpc	r27, r17
   84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
   86:	0e 94 49 00 	call	0x92	; 0x92 <main>
-  8a:	0c 94 6e 02 	jmp	0x4dc	; 0x4dc <_exit>
+  8a:	0c 94 9f 02 	jmp	0x53e	; 0x53e <_exit>
 
 0000008e <__bad_interrupt>:
   8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -106,22 +106,22 @@ int main( void )
   98:	de b7       	in	r29, 0x3e	; 62
 
 	hdInit();
-  9a:	0e 94 60 02 	call	0x4c0	; 0x4c0 <hdInit>
-	dbgSendString("Reset!!!");
+  9a:	0e 94 91 02 	call	0x522	; 0x522 <hdInit>
+	dbgSendRobotString("Reset");
   9e:	80 e6       	ldi	r24, 0x60	; 96
   a0:	90 e0       	ldi	r25, 0x00	; 0
-  a2:	0e 94 cd 01 	call	0x39a	; 0x39a <dbgSendString>
+  a2:	0e 94 e7 01 	call	0x3ce	; 0x3ce <dbgSendRobotString>
 
 	while(1)
 	{
 		cPMainCmdParser();
-  a6:	0e 94 e3 01 	call	0x3c6	; 0x3c6 <cPMainCmdParser>
+  a6:	0e 94 01 02 	call	0x402	; 0x402 <cPMainCmdParser>
   aa:	fd cf       	rjmp	.-6      	; 0xa6 <main+0x14>
 
 000000ac <uartInitBuffers>:
 
 /*
- Initialisation des var pour les FIFOS
+ Initialisation des variables pour les FIFOS
 */
 void uartInitBuffers(void)
 {
@@ -130,17 +130,17 @@ void uartInitBuffers(void)
   b0:	cd b7       	in	r28, 0x3d	; 61
   b2:	de b7       	in	r29, 0x3e	; 62
 	uartRxInPtr		=0;
-  b4:	10 92 be 00 	sts	0x00BE, r1
+  b4:	10 92 c5 00 	sts	0x00C5, r1
 	uartRxOutPtr	=0;
-  b8:	10 92 7f 00 	sts	0x007F, r1
+  b8:	10 92 86 00 	sts	0x0086, r1
 	uartTxInPtr		=0;
-  bc:	10 92 7e 00 	sts	0x007E, r1
+  bc:	10 92 85 00 	sts	0x0085, r1
 	uartTxOutPtr	=0;   
-  c0:	10 92 bf 00 	sts	0x00BF, r1
+  c0:	10 92 c6 00 	sts	0x00C6, r1
 	uartTxSize		=0;
-  c4:	10 92 bd 00 	sts	0x00BD, r1
+  c4:	10 92 c4 00 	sts	0x00C4, r1
     uartRxSize		=0; 
-  c8:	10 92 bc 00 	sts	0x00BC, r1
+  c8:	10 92 c3 00 	sts	0x00C3, r1
 }
   cc:	cf 91       	pop	r28
   ce:	df 91       	pop	r29
@@ -199,44 +199,44 @@ void uartTxRoutine(void)
  106:	cd b7       	in	r28, 0x3d	; 61
  108:	de b7       	in	r29, 0x3e	; 62
 	if(uartTxSize)
- 10a:	80 91 bd 00 	lds	r24, 0x00BD
+ 10a:	80 91 c4 00 	lds	r24, 0x00C4
  10e:	88 23       	and	r24, r24
  110:	e1 f0       	breq	.+56     	; 0x14a <uartTxRoutine+0x48>
 	{
 		UDR = uartTxBuffer[uartTxOutPtr];      
  112:	ac e2       	ldi	r26, 0x2C	; 44
  114:	b0 e0       	ldi	r27, 0x00	; 0
- 116:	80 91 bf 00 	lds	r24, 0x00BF
+ 116:	80 91 c6 00 	lds	r24, 0x00C6
  11a:	88 2f       	mov	r24, r24
  11c:	90 e0       	ldi	r25, 0x00	; 0
  11e:	fc 01       	movw	r30, r24
- 120:	e0 54       	subi	r30, 0x40	; 64
+ 120:	e9 53       	subi	r30, 0x39	; 57
  122:	ff 4f       	sbci	r31, 0xFF	; 255
  124:	80 81       	ld	r24, Z
  126:	8c 93       	st	X, r24
 		uartTxOutPtr++;
- 128:	80 91 bf 00 	lds	r24, 0x00BF
+ 128:	80 91 c6 00 	lds	r24, 0x00C6
  12c:	8f 5f       	subi	r24, 0xFF	; 255
- 12e:	80 93 bf 00 	sts	0x00BF, r24
+ 12e:	80 93 c6 00 	sts	0x00C6, r24
 		uartTxSize--;
- 132:	80 91 bd 00 	lds	r24, 0x00BD
+ 132:	80 91 c4 00 	lds	r24, 0x00C4
  136:	81 50       	subi	r24, 0x01	; 1
- 138:	80 93 bd 00 	sts	0x00BD, r24
-		//remet à zéro si jamais la taille du buffer 
+ 138:	80 93 c4 00 	sts	0x00C4, r24
+		//remet à zéro si jamais la taille du buffer est dépassé
 		if(uartTxOutPtr>(UART_TX_BUFFER_SIZE-1))
- 13c:	80 91 bf 00 	lds	r24, 0x00BF
+ 13c:	80 91 c6 00 	lds	r24, 0x00C6
  140:	8c 33       	cpi	r24, 0x3C	; 60
  142:	38 f0       	brcs	.+14     	; 0x152 <uartTxRoutine+0x50>
 	 		uartTxOutPtr=0;
- 144:	10 92 bf 00 	sts	0x00BF, r1
+ 144:	10 92 c6 00 	sts	0x00C6, r1
  148:	04 c0       	rjmp	.+8      	; 0x152 <uartTxRoutine+0x50>
 	}
 	else
 	{
 		uartTxOutPtr=0;
- 14a:	10 92 bf 00 	sts	0x00BF, r1
+ 14a:	10 92 c6 00 	sts	0x00C6, r1
 		uartTxInPtr=0;
- 14e:	10 92 7e 00 	sts	0x007E, r1
+ 14e:	10 92 85 00 	sts	0x0085, r1
 	}
 		
 }
@@ -256,30 +256,31 @@ void uartRxRoutine(void)
  15c:	cd b7       	in	r28, 0x3d	; 61
  15e:	de b7       	in	r29, 0x3e	; 62
 	uartRxBuffer[uartRxInPtr] = UDR;        
- 160:	80 91 be 00 	lds	r24, 0x00BE
+ 160:	80 91 c5 00 	lds	r24, 0x00C5
  164:	88 2f       	mov	r24, r24
  166:	90 e0       	ldi	r25, 0x00	; 0
  168:	ec e2       	ldi	r30, 0x2C	; 44
  16a:	f0 e0       	ldi	r31, 0x00	; 0
  16c:	20 81       	ld	r18, Z
  16e:	fc 01       	movw	r30, r24
- 170:	e0 58       	subi	r30, 0x80	; 128
+ 170:	e9 57       	subi	r30, 0x79	; 121
  172:	ff 4f       	sbci	r31, 0xFF	; 255
  174:	20 83       	st	Z, r18
 	uartRxInPtr++;
- 176:	80 91 be 00 	lds	r24, 0x00BE
+ 176:	80 91 c5 00 	lds	r24, 0x00C5
  17a:	8f 5f       	subi	r24, 0xFF	; 255
- 17c:	80 93 be 00 	sts	0x00BE, r24
+ 17c:	80 93 c5 00 	sts	0x00C5, r24
 	uartRxSize++;
- 180:	80 91 bc 00 	lds	r24, 0x00BC
+ 180:	80 91 c3 00 	lds	r24, 0x00C3
  184:	8f 5f       	subi	r24, 0xFF	; 255
- 186:	80 93 bc 00 	sts	0x00BC, r24
+ 186:	80 93 c3 00 	sts	0x00C3, r24
+	//remet à zéro si jamais la taille du buffer est dépassé
 	if(uartRxInPtr>(UART_RX_BUFFER_SIZE-1))
- 18a:	80 91 be 00 	lds	r24, 0x00BE
+ 18a:	80 91 c5 00 	lds	r24, 0x00C5
  18e:	8c 33       	cpi	r24, 0x3C	; 60
  190:	10 f0       	brcs	.+4      	; 0x196 <uartRxRoutine+0x3e>
 			uartRxInPtr=0;
- 192:	10 92 be 00 	sts	0x00BE, r1
+ 192:	10 92 c5 00 	sts	0x00C5, r1
 }
  196:	cf 91       	pop	r28
  198:	df 91       	pop	r29
@@ -308,14 +309,14 @@ void uartSendString(U8 *buf)
 	while((*buf!=UART_END_OF_STRING_CHAR) && (stringSize<UART_MAX_SIZE_STRING))
 	{
 		uartTxBuffer[uartTxInPtr]=*buf;
- 1b0:	80 91 7e 00 	lds	r24, 0x007E
+ 1b0:	80 91 85 00 	lds	r24, 0x0085
  1b4:	88 2f       	mov	r24, r24
  1b6:	90 e0       	ldi	r25, 0x00	; 0
  1b8:	ea 81       	ldd	r30, Y+2	; 0x02
  1ba:	fb 81       	ldd	r31, Y+3	; 0x03
  1bc:	20 81       	ld	r18, Z
  1be:	fc 01       	movw	r30, r24
- 1c0:	e0 54       	subi	r30, 0x40	; 64
+ 1c0:	e9 53       	subi	r30, 0x39	; 57
  1c2:	ff 4f       	sbci	r31, 0xFF	; 255
  1c4:	20 83       	st	Z, r18
 
@@ -326,13 +327,13 @@ void uartSendString(U8 *buf)
  1cc:	9b 83       	std	Y+3, r25	; 0x03
  1ce:	8a 83       	std	Y+2, r24	; 0x02
 		uartTxInPtr++;
- 1d0:	80 91 7e 00 	lds	r24, 0x007E
+ 1d0:	80 91 85 00 	lds	r24, 0x0085
  1d4:	8f 5f       	subi	r24, 0xFF	; 255
- 1d6:	80 93 7e 00 	sts	0x007E, r24
+ 1d6:	80 93 85 00 	sts	0x0085, r24
 		uartTxSize++;
- 1da:	80 91 bd 00 	lds	r24, 0x00BD
+ 1da:	80 91 c4 00 	lds	r24, 0x00C4
  1de:	8f 5f       	subi	r24, 0xFF	; 255
- 1e0:	80 93 bd 00 	sts	0x00BD, r24
+ 1e0:	80 93 c4 00 	sts	0x00C4, r24
 		stringSize++;
  1e4:	89 81       	ldd	r24, Y+1	; 0x01
  1e6:	8f 5f       	subi	r24, 0xFF	; 255
@@ -340,11 +341,11 @@ void uartSendString(U8 *buf)
 
 		//remet à zéro uartTxInPtr si  dépasse la taille du buffer 
 		if(uartTxInPtr>(UART_TX_BUFFER_SIZE-1))
- 1ea:	80 91 7e 00 	lds	r24, 0x007E
+ 1ea:	80 91 85 00 	lds	r24, 0x0085
  1ee:	8c 33       	cpi	r24, 0x3C	; 60
  1f0:	10 f0       	brcs	.+4      	; 0x1f6 <uartSendString+0x5a>
 			uartTxInPtr=0;		
- 1f2:	10 92 7e 00 	sts	0x007E, r1
+ 1f2:	10 92 85 00 	sts	0x0085, r1
 void uartSendString(U8 *buf)
 { 
 	U8 stringSize=0;
@@ -396,28 +397,28 @@ void uartSendByte(U8 byte)
  22a:	89 83       	std	Y+1, r24	; 0x01
 	
 	uartTxBuffer[uartTxInPtr]=byte;
- 22c:	80 91 7e 00 	lds	r24, 0x007E
+ 22c:	80 91 85 00 	lds	r24, 0x0085
  230:	88 2f       	mov	r24, r24
  232:	90 e0       	ldi	r25, 0x00	; 0
  234:	fc 01       	movw	r30, r24
- 236:	e0 54       	subi	r30, 0x40	; 64
+ 236:	e9 53       	subi	r30, 0x39	; 57
  238:	ff 4f       	sbci	r31, 0xFF	; 255
  23a:	89 81       	ldd	r24, Y+1	; 0x01
  23c:	80 83       	st	Z, r24
 	uartTxInPtr++;
- 23e:	80 91 7e 00 	lds	r24, 0x007E
+ 23e:	80 91 85 00 	lds	r24, 0x0085
  242:	8f 5f       	subi	r24, 0xFF	; 255
- 244:	80 93 7e 00 	sts	0x007E, r24
+ 244:	80 93 85 00 	sts	0x0085, r24
 	uartTxSize++;
- 248:	80 91 bd 00 	lds	r24, 0x00BD
+ 248:	80 91 c4 00 	lds	r24, 0x00C4
  24c:	8f 5f       	subi	r24, 0xFF	; 255
- 24e:	80 93 bd 00 	sts	0x00BD, r24
+ 24e:	80 93 c4 00 	sts	0x00C4, r24
 	if(uartTxInPtr>(UART_TX_BUFFER_SIZE-1))
- 252:	80 91 7e 00 	lds	r24, 0x007E
+ 252:	80 91 85 00 	lds	r24, 0x0085
  256:	8c 33       	cpi	r24, 0x3C	; 60
  258:	10 f0       	brcs	.+4      	; 0x25e <uartSendByte+0x3e>
 		uartTxInPtr=0;
- 25a:	10 92 7e 00 	sts	0x007E, r1
+ 25a:	10 92 85 00 	sts	0x0085, r1
 
 	//envoie le premier byte pour démarrer l'interruption si UDRE est à 1
    	if(UCSRA&&(1<<UDRE))
@@ -450,42 +451,42 @@ U8 uartGetByte(void)
 	U8 rxByte=0;
  27e:	19 82       	std	Y+1, r1	; 0x01
 	if(uartRxSize)
- 280:	80 91 bc 00 	lds	r24, 0x00BC
+ 280:	80 91 c3 00 	lds	r24, 0x00C3
  284:	88 23       	and	r24, r24
  286:	d1 f0       	breq	.+52     	; 0x2bc <uartGetByte+0x48>
 	{		
 		rxByte=uartRxBuffer[uartRxOutPtr];
- 288:	80 91 7f 00 	lds	r24, 0x007F
+ 288:	80 91 86 00 	lds	r24, 0x0086
  28c:	88 2f       	mov	r24, r24
  28e:	90 e0       	ldi	r25, 0x00	; 0
  290:	fc 01       	movw	r30, r24
- 292:	e0 58       	subi	r30, 0x80	; 128
+ 292:	e9 57       	subi	r30, 0x79	; 121
  294:	ff 4f       	sbci	r31, 0xFF	; 255
  296:	80 81       	ld	r24, Z
  298:	89 83       	std	Y+1, r24	; 0x01
 		uartRxOutPtr++;
- 29a:	80 91 7f 00 	lds	r24, 0x007F
+ 29a:	80 91 86 00 	lds	r24, 0x0086
  29e:	8f 5f       	subi	r24, 0xFF	; 255
- 2a0:	80 93 7f 00 	sts	0x007F, r24
+ 2a0:	80 93 86 00 	sts	0x0086, r24
 		//remet à zéro si dépasse la taille du buffer 
 		if(uartRxOutPtr>(UART_RX_BUFFER_SIZE-1))
- 2a4:	80 91 7f 00 	lds	r24, 0x007F
+ 2a4:	80 91 86 00 	lds	r24, 0x0086
  2a8:	8c 33       	cpi	r24, 0x3C	; 60
  2aa:	10 f0       	brcs	.+4      	; 0x2b0 <uartGetByte+0x3c>
 			uartRxOutPtr=0;
- 2ac:	10 92 7f 00 	sts	0x007F, r1
+ 2ac:	10 92 86 00 	sts	0x0086, r1
 		uartRxSize--;
- 2b0:	80 91 bc 00 	lds	r24, 0x00BC
+ 2b0:	80 91 c3 00 	lds	r24, 0x00C3
  2b4:	81 50       	subi	r24, 0x01	; 1
- 2b6:	80 93 bc 00 	sts	0x00BC, r24
+ 2b6:	80 93 c3 00 	sts	0x00C3, r24
  2ba:	04 c0       	rjmp	.+8      	; 0x2c4 <uartGetByte+0x50>
 	}
 	else
 	{
 		uartRxOutPtr=0;
- 2bc:	10 92 7f 00 	sts	0x007F, r1
+ 2bc:	10 92 86 00 	sts	0x0086, r1
 		uartRxInPtr=0;
- 2c0:	10 92 be 00 	sts	0x00BE, r1
+ 2c0:	10 92 c5 00 	sts	0x00C5, r1
 	}
 	return rxByte;		
  2c4:	89 81       	ldd	r24, Y+1	; 0x01
@@ -508,7 +509,7 @@ U8 uartGetRxSize(void)
  2d2:	cd b7       	in	r28, 0x3d	; 61
  2d4:	de b7       	in	r29, 0x3e	; 62
 	return uartRxSize;
- 2d6:	80 91 bc 00 	lds	r24, 0x00BC
+ 2d6:	80 91 c3 00 	lds	r24, 0x00C3
 }
  2da:	cf 91       	pop	r28
  2dc:	df 91       	pop	r29
@@ -526,7 +527,7 @@ U8 uartGetTxSize(void)
  2e4:	cd b7       	in	r28, 0x3d	; 61
  2e6:	de b7       	in	r29, 0x3e	; 62
 	return uartTxSize;
- 2e8:	80 91 bd 00 	lds	r24, 0x00BD
+ 2e8:	80 91 c4 00 	lds	r24, 0x00C4
 }
  2ec:	cf 91       	pop	r28
  2ee:	df 91       	pop	r29
@@ -650,207 +651,275 @@ void dbgSendString(U8 *buf)
 		uartSendByte(0xFE);
  3a8:	8e ef       	ldi	r24, 0xFE	; 254
  3aa:	0e 94 10 01 	call	0x220	; 0x220 <uartSendByte>
-		//SEND STRING
-		uartSendString(buf);
- 3ae:	89 81       	ldd	r24, Y+1	; 0x01
- 3b0:	9a 81       	ldd	r25, Y+2	; 0x02
+		//SEND STRINGS
+		uartSendString("Debug: ");
+ 3ae:	86 e6       	ldi	r24, 0x66	; 102
+ 3b0:	90 e0       	ldi	r25, 0x00	; 0
  3b2:	0e 94 ce 00 	call	0x19c	; 0x19c <uartSendString>
+		uartSendString(buf);
+ 3b6:	89 81       	ldd	r24, Y+1	; 0x01
+ 3b8:	9a 81       	ldd	r25, Y+2	; 0x02
+ 3ba:	0e 94 ce 00 	call	0x19c	; 0x19c <uartSendString>
 		//SEND END BYTE
 		uartSendByte(0xFF);
- 3b6:	8f ef       	ldi	r24, 0xFF	; 255
- 3b8:	0e 94 10 01 	call	0x220	; 0x220 <uartSendByte>
+ 3be:	8f ef       	ldi	r24, 0xFF	; 255
+ 3c0:	0e 94 10 01 	call	0x220	; 0x220 <uartSendByte>
 }
- 3bc:	0f 90       	pop	r0
- 3be:	0f 90       	pop	r0
- 3c0:	cf 91       	pop	r28
- 3c2:	df 91       	pop	r29
- 3c4:	08 95       	ret
+ 3c4:	0f 90       	pop	r0
+ 3c6:	0f 90       	pop	r0
+ 3c8:	cf 91       	pop	r28
+ 3ca:	df 91       	pop	r29
+ 3cc:	08 95       	ret
 
-000003c6 <cPMainCmdParser>:
+000003ce <dbgSendRobotString>:
+
+void dbgSendRobotString(U8 *buf)
+{	
+ 3ce:	df 93       	push	r29
+ 3d0:	cf 93       	push	r28
+ 3d2:	00 d0       	rcall	.+0      	; 0x3d4 <dbgSendRobotString+0x6>
+ 3d4:	cd b7       	in	r28, 0x3d	; 61
+ 3d6:	de b7       	in	r29, 0x3e	; 62
+ 3d8:	9a 83       	std	Y+2, r25	; 0x02
+ 3da:	89 83       	std	Y+1, r24	; 0x01
+		//SEND START BYTE
+		uartSendByte(0xFE);
+ 3dc:	8e ef       	ldi	r24, 0xFE	; 254
+ 3de:	0e 94 10 01 	call	0x220	; 0x220 <uartSendByte>
+		//SEND STRINGS
+		uartSendString("Robot: ");
+ 3e2:	8e e6       	ldi	r24, 0x6E	; 110
+ 3e4:	90 e0       	ldi	r25, 0x00	; 0
+ 3e6:	0e 94 ce 00 	call	0x19c	; 0x19c <uartSendString>
+		uartSendString(buf);
+ 3ea:	89 81       	ldd	r24, Y+1	; 0x01
+ 3ec:	9a 81       	ldd	r25, Y+2	; 0x02
+ 3ee:	0e 94 ce 00 	call	0x19c	; 0x19c <uartSendString>
+		//SEND END BYTE
+		uartSendByte(0xFF);
+ 3f2:	8f ef       	ldi	r24, 0xFF	; 255
+ 3f4:	0e 94 10 01 	call	0x220	; 0x220 <uartSendByte>
+}
+ 3f8:	0f 90       	pop	r0
+ 3fa:	0f 90       	pop	r0
+ 3fc:	cf 91       	pop	r28
+ 3fe:	df 91       	pop	r29
+ 400:	08 95       	ret
+
+00000402 <cPMainCmdParser>:
 
 
 
 
 void cPMainCmdParser(void)
 {
- 3c6:	df 93       	push	r29
- 3c8:	cf 93       	push	r28
- 3ca:	00 d0       	rcall	.+0      	; 0x3cc <cPMainCmdParser+0x6>
- 3cc:	cd b7       	in	r28, 0x3d	; 61
- 3ce:	de b7       	in	r29, 0x3e	; 62
+ 402:	df 93       	push	r29
+ 404:	cf 93       	push	r28
+ 406:	00 d0       	rcall	.+0      	; 0x408 <cPMainCmdParser+0x6>
+ 408:	cd b7       	in	r28, 0x3d	; 61
+ 40a:	de b7       	in	r29, 0x3e	; 62
 
 	if(uartGetRxSize())
- 3d0:	0e 94 67 01 	call	0x2ce	; 0x2ce <uartGetRxSize>
- 3d4:	88 23       	and	r24, r24
- 3d6:	09 f4       	brne	.+2      	; 0x3da <cPMainCmdParser+0x14>
- 3d8:	6e c0       	rjmp	.+220    	; 0x4b6 <cPMainCmdParser+0xf0>
+ 40c:	0e 94 67 01 	call	0x2ce	; 0x2ce <uartGetRxSize>
+ 410:	88 23       	and	r24, r24
+ 412:	09 f4       	brne	.+2      	; 0x416 <cPMainCmdParser+0x14>
+ 414:	81 c0       	rjmp	.+258    	; 0x518 <cPMainCmdParser+0x116>
 	{
 		data=uartGetByte();
- 3da:	0e 94 3a 01 	call	0x274	; 0x274 <uartGetByte>
- 3de:	80 93 fc 00 	sts	0x00FC, r24
- 		switch(cPState)
- 3e2:	80 91 7a 00 	lds	r24, 0x007A
- 3e6:	28 2f       	mov	r18, r24
- 3e8:	30 e0       	ldi	r19, 0x00	; 0
- 3ea:	3a 83       	std	Y+2, r19	; 0x02
- 3ec:	29 83       	std	Y+1, r18	; 0x01
- 3ee:	89 81       	ldd	r24, Y+1	; 0x01
- 3f0:	9a 81       	ldd	r25, Y+2	; 0x02
- 3f2:	81 30       	cpi	r24, 0x01	; 1
- 3f4:	91 05       	cpc	r25, r1
- 3f6:	59 f1       	breq	.+86     	; 0x44e <cPMainCmdParser+0x88>
- 3f8:	29 81       	ldd	r18, Y+1	; 0x01
- 3fa:	3a 81       	ldd	r19, Y+2	; 0x02
- 3fc:	22 30       	cpi	r18, 0x02	; 2
- 3fe:	31 05       	cpc	r19, r1
- 400:	2c f4       	brge	.+10     	; 0x40c <cPMainCmdParser+0x46>
- 402:	89 81       	ldd	r24, Y+1	; 0x01
- 404:	9a 81       	ldd	r25, Y+2	; 0x02
- 406:	00 97       	sbiw	r24, 0x00	; 0
- 408:	69 f0       	breq	.+26     	; 0x424 <cPMainCmdParser+0x5e>
- 40a:	53 c0       	rjmp	.+166    	; 0x4b2 <cPMainCmdParser+0xec>
- 40c:	29 81       	ldd	r18, Y+1	; 0x01
- 40e:	3a 81       	ldd	r19, Y+2	; 0x02
- 410:	22 30       	cpi	r18, 0x02	; 2
- 412:	31 05       	cpc	r19, r1
- 414:	b1 f1       	breq	.+108    	; 0x482 <cPMainCmdParser+0xbc>
- 416:	89 81       	ldd	r24, Y+1	; 0x01
- 418:	9a 81       	ldd	r25, Y+2	; 0x02
- 41a:	83 30       	cpi	r24, 0x03	; 3
- 41c:	91 05       	cpc	r25, r1
- 41e:	09 f4       	brne	.+2      	; 0x422 <cPMainCmdParser+0x5c>
- 420:	41 c0       	rjmp	.+130    	; 0x4a4 <cPMainCmdParser+0xde>
- 422:	47 c0       	rjmp	.+142    	; 0x4b2 <cPMainCmdParser+0xec>
+ 416:	0e 94 3a 01 	call	0x274	; 0x274 <uartGetByte>
+ 41a:	80 93 84 00 	sts	0x0084, r24
+ 	  	switch(cPState)
+ 41e:	80 91 80 00 	lds	r24, 0x0080
+ 422:	28 2f       	mov	r18, r24
+ 424:	30 e0       	ldi	r19, 0x00	; 0
+ 426:	3a 83       	std	Y+2, r19	; 0x02
+ 428:	29 83       	std	Y+1, r18	; 0x01
+ 42a:	89 81       	ldd	r24, Y+1	; 0x01
+ 42c:	9a 81       	ldd	r25, Y+2	; 0x02
+ 42e:	82 30       	cpi	r24, 0x02	; 2
+ 430:	91 05       	cpc	r25, r1
+ 432:	09 f4       	brne	.+2      	; 0x436 <cPMainCmdParser+0x34>
+ 434:	4b c0       	rjmp	.+150    	; 0x4cc <cPMainCmdParser+0xca>
+ 436:	29 81       	ldd	r18, Y+1	; 0x01
+ 438:	3a 81       	ldd	r19, Y+2	; 0x02
+ 43a:	23 30       	cpi	r18, 0x03	; 3
+ 43c:	31 05       	cpc	r19, r1
+ 43e:	54 f4       	brge	.+20     	; 0x454 <cPMainCmdParser+0x52>
+ 440:	89 81       	ldd	r24, Y+1	; 0x01
+ 442:	9a 81       	ldd	r25, Y+2	; 0x02
+ 444:	00 97       	sbiw	r24, 0x00	; 0
+ 446:	99 f0       	breq	.+38     	; 0x46e <cPMainCmdParser+0x6c>
+ 448:	29 81       	ldd	r18, Y+1	; 0x01
+ 44a:	3a 81       	ldd	r19, Y+2	; 0x02
+ 44c:	21 30       	cpi	r18, 0x01	; 1
+ 44e:	31 05       	cpc	r19, r1
+ 450:	19 f1       	breq	.+70     	; 0x498 <cPMainCmdParser+0x96>
+ 452:	60 c0       	rjmp	.+192    	; 0x514 <cPMainCmdParser+0x112>
+ 454:	89 81       	ldd	r24, Y+1	; 0x01
+ 456:	9a 81       	ldd	r25, Y+2	; 0x02
+ 458:	83 30       	cpi	r24, 0x03	; 3
+ 45a:	91 05       	cpc	r25, r1
+ 45c:	09 f4       	brne	.+2      	; 0x460 <cPMainCmdParser+0x5e>
+ 45e:	4a c0       	rjmp	.+148    	; 0x4f4 <cPMainCmdParser+0xf2>
+ 460:	29 81       	ldd	r18, Y+1	; 0x01
+ 462:	3a 81       	ldd	r19, Y+2	; 0x02
+ 464:	24 30       	cpi	r18, 0x04	; 4
+ 466:	31 05       	cpc	r19, r1
+ 468:	09 f4       	brne	.+2      	; 0x46c <cPMainCmdParser+0x6a>
+ 46a:	4b c0       	rjmp	.+150    	; 0x502 <cPMainCmdParser+0x100>
+ 46c:	53 c0       	rjmp	.+166    	; 0x514 <cPMainCmdParser+0x112>
  		{
- 		case CP_SYNC_STATE:
-			if(data==CP_CMD_NORMALE||data==CP_CMD_ARRET)
- 424:	80 91 fc 00 	lds	r24, 0x00FC
- 428:	81 3f       	cpi	r24, 0xF1	; 241
- 42a:	29 f0       	breq	.+10     	; 0x436 <cPMainCmdParser+0x70>
- 42c:	80 91 fc 00 	lds	r24, 0x00FC
- 430:	80 3f       	cpi	r24, 0xF0	; 240
- 432:	09 f0       	breq	.+2      	; 0x436 <cPMainCmdParser+0x70>
- 434:	40 c0       	rjmp	.+128    	; 0x4b6 <cPMainCmdParser+0xf0>
-			{			
-				uartSendByte(data);
- 436:	80 91 fc 00 	lds	r24, 0x00FC
- 43a:	0e 94 10 01 	call	0x220	; 0x220 <uartSendByte>
-				cPCmdValue=data;
- 43e:	80 91 fc 00 	lds	r24, 0x00FC
- 442:	80 93 7b 00 	sts	0x007B, r24
-				cPState=CP_SET_VITESSE_STATE;
- 446:	81 e0       	ldi	r24, 0x01	; 1
- 448:	80 93 7a 00 	sts	0x007A, r24
- 44c:	34 c0       	rjmp	.+104    	; 0x4b6 <cPMainCmdParser+0xf0>
-			}
-		break;
+	 		case CP_SYNC_STATE:
 
-		case CP_SET_VITESSE_STATE:
+				if(data==CP_CMD_NORMALE||data==CP_CMD_ARRET)
+ 46e:	80 91 84 00 	lds	r24, 0x0084
+ 472:	81 3f       	cpi	r24, 0xF1	; 241
+ 474:	29 f0       	breq	.+10     	; 0x480 <cPMainCmdParser+0x7e>
+ 476:	80 91 84 00 	lds	r24, 0x0084
+ 47a:	80 3f       	cpi	r24, 0xF0	; 240
+ 47c:	09 f0       	breq	.+2      	; 0x480 <cPMainCmdParser+0x7e>
+ 47e:	4c c0       	rjmp	.+152    	; 0x518 <cPMainCmdParser+0x116>
+				{			
+					uartSendByte(data);
+ 480:	80 91 84 00 	lds	r24, 0x0084
+ 484:	0e 94 10 01 	call	0x220	; 0x220 <uartSendByte>
+					cPCmdValue=data;
+ 488:	80 91 84 00 	lds	r24, 0x0084
+ 48c:	80 93 81 00 	sts	0x0081, r24
+					cPState=CP_GET_VITESSE_STATE;
+ 490:	81 e0       	ldi	r24, 0x01	; 1
+ 492:	80 93 80 00 	sts	0x0080, r24
+ 496:	40 c0       	rjmp	.+128    	; 0x518 <cPMainCmdParser+0x116>
+
+			break;
+
+			case CP_GET_VITESSE_STATE:
 			
-			if(cPVitesseValue!=data&&data==0)
- 44e:	90 91 7c 00 	lds	r25, 0x007C
- 452:	80 91 fc 00 	lds	r24, 0x00FC
- 456:	98 17       	cp	r25, r24
- 458:	41 f0       	breq	.+16     	; 0x46a <cPMainCmdParser+0xa4>
- 45a:	80 91 fc 00 	lds	r24, 0x00FC
- 45e:	88 23       	and	r24, r24
- 460:	21 f4       	brne	.+8      	; 0x46a <cPMainCmdParser+0xa4>
-				dbgSendString("vitesse=0");
- 462:	89 e6       	ldi	r24, 0x69	; 105
- 464:	90 e0       	ldi	r25, 0x00	; 0
- 466:	0e 94 cd 01 	call	0x39a	; 0x39a <dbgSendString>
-			cPVitesseValue=data;
- 46a:	80 91 fc 00 	lds	r24, 0x00FC
- 46e:	80 93 7c 00 	sts	0x007C, r24
-			uartSendByte(data);
- 472:	80 91 fc 00 	lds	r24, 0x00FC
- 476:	0e 94 10 01 	call	0x220	; 0x220 <uartSendByte>
-			cPState=CP_SET_ANGLE_STATE;
- 47a:	82 e0       	ldi	r24, 0x02	; 2
- 47c:	80 93 7a 00 	sts	0x007A, r24
- 480:	1a c0       	rjmp	.+52     	; 0x4b6 <cPMainCmdParser+0xf0>
+				if( (cPVitesseValue!=data) && (data==0) )
+ 498:	90 91 82 00 	lds	r25, 0x0082
+ 49c:	80 91 84 00 	lds	r24, 0x0084
+ 4a0:	98 17       	cp	r25, r24
+ 4a2:	41 f0       	breq	.+16     	; 0x4b4 <cPMainCmdParser+0xb2>
+ 4a4:	80 91 84 00 	lds	r24, 0x0084
+ 4a8:	88 23       	and	r24, r24
+ 4aa:	21 f4       	brne	.+8      	; 0x4b4 <cPMainCmdParser+0xb2>
+					dbgSendString("vitesse=0");
+ 4ac:	86 e7       	ldi	r24, 0x76	; 118
+ 4ae:	90 e0       	ldi	r25, 0x00	; 0
+ 4b0:	0e 94 cd 01 	call	0x39a	; 0x39a <dbgSendString>
 
-		break;
-
-
-		case CP_SET_ANGLE_STATE:
-			cPAngleValue=data;
- 482:	80 91 fc 00 	lds	r24, 0x00FC
- 486:	80 93 7d 00 	sts	0x007D, r24
-			uartSendByte(data);
- 48a:	80 91 fc 00 	lds	r24, 0x00FC
- 48e:	0e 94 10 01 	call	0x220	; 0x220 <uartSendByte>
-			cPState=CP_SYNC_STATE;
- 492:	10 92 7a 00 	sts	0x007A, r1
-			PORTB=~cPAngleValue;
- 496:	e8 e3       	ldi	r30, 0x38	; 56
- 498:	f0 e0       	ldi	r31, 0x00	; 0
- 49a:	80 91 7d 00 	lds	r24, 0x007D
- 49e:	80 95       	com	r24
- 4a0:	80 83       	st	Z, r24
- 4a2:	09 c0       	rjmp	.+18     	; 0x4b6 <cPMainCmdParser+0xf0>
-
-		break;
-
-		case CP_ARRET_STATE:
-
-			cPState=CP_SYNC_STATE;
- 4a4:	10 92 7a 00 	sts	0x007A, r1
-			dbgSendString("arret");
- 4a8:	83 e7       	ldi	r24, 0x73	; 115
- 4aa:	90 e0       	ldi	r25, 0x00	; 0
- 4ac:	0e 94 cd 01 	call	0x39a	; 0x39a <dbgSendString>
- 4b0:	02 c0       	rjmp	.+4      	; 0x4b6 <cPMainCmdParser+0xf0>
+				cPVitesseValue=data;
+ 4b4:	80 91 84 00 	lds	r24, 0x0084
+ 4b8:	80 93 82 00 	sts	0x0082, r24
+				uartSendByte(data);
+ 4bc:	80 91 84 00 	lds	r24, 0x0084
+ 4c0:	0e 94 10 01 	call	0x220	; 0x220 <uartSendByte>
+				cPState=CP_GET_ANGLE_STATE;			
+ 4c4:	82 e0       	ldi	r24, 0x02	; 2
+ 4c6:	80 93 80 00 	sts	0x0080, r24
+ 4ca:	26 c0       	rjmp	.+76     	; 0x518 <cPMainCmdParser+0x116>
+			break;
 
 
-		break;
+			case CP_GET_ANGLE_STATE:
 
-		default:
-			cPState=CP_SYNC_STATE;
- 4b2:	10 92 7a 00 	sts	0x007A, r1
+				cPAngleValue=data;
+ 4cc:	80 91 84 00 	lds	r24, 0x0084
+ 4d0:	80 93 83 00 	sts	0x0083, r24
+				uartSendByte(data);
+ 4d4:	80 91 84 00 	lds	r24, 0x0084
+ 4d8:	0e 94 10 01 	call	0x220	; 0x220 <uartSendByte>
+
+				if(cPCmdValue==CP_CMD_NORMALE)
+ 4dc:	80 91 81 00 	lds	r24, 0x0081
+ 4e0:	81 3f       	cpi	r24, 0xF1	; 241
+ 4e2:	21 f4       	brne	.+8      	; 0x4ec <cPMainCmdParser+0xea>
+					cPState=CP_RUN_STATE;
+ 4e4:	84 e0       	ldi	r24, 0x04	; 4
+ 4e6:	80 93 80 00 	sts	0x0080, r24
+ 4ea:	16 c0       	rjmp	.+44     	; 0x518 <cPMainCmdParser+0x116>
+				else
+					cPState=CP_ARRET_STATE;
+ 4ec:	83 e0       	ldi	r24, 0x03	; 3
+ 4ee:	80 93 80 00 	sts	0x0080, r24
+ 4f2:	12 c0       	rjmp	.+36     	; 0x518 <cPMainCmdParser+0x116>
+			break;
+
+			case CP_ARRET_STATE:
+
+				cPState=CP_SYNC_STATE;
+ 4f4:	10 92 80 00 	sts	0x0080, r1
+			//	dbgSendString("arret");
+				PORTB=0x55;
+ 4f8:	e8 e3       	ldi	r30, 0x38	; 56
+ 4fa:	f0 e0       	ldi	r31, 0x00	; 0
+ 4fc:	85 e5       	ldi	r24, 0x55	; 85
+ 4fe:	80 83       	st	Z, r24
+ 500:	0b c0       	rjmp	.+22     	; 0x518 <cPMainCmdParser+0x116>
+
+			break;
+
+			case CP_RUN_STATE:
+
+				cPState=CP_SYNC_STATE;
+ 502:	10 92 80 00 	sts	0x0080, r1
+			//	dbgSendString("run");
+				PORTB=~cPAngleValue;
+ 506:	e8 e3       	ldi	r30, 0x38	; 56
+ 508:	f0 e0       	ldi	r31, 0x00	; 0
+ 50a:	80 91 83 00 	lds	r24, 0x0083
+ 50e:	80 95       	com	r24
+ 510:	80 83       	st	Z, r24
+ 512:	02 c0       	rjmp	.+4      	; 0x518 <cPMainCmdParser+0x116>
+
+			break;
+
+			default:
+				cPState=CP_SYNC_STATE;
+ 514:	10 92 80 00 	sts	0x0080, r1
  		}
 
 	}
 
 
 }
- 4b6:	0f 90       	pop	r0
- 4b8:	0f 90       	pop	r0
- 4ba:	cf 91       	pop	r28
- 4bc:	df 91       	pop	r29
- 4be:	08 95       	ret
+ 518:	0f 90       	pop	r0
+ 51a:	0f 90       	pop	r0
+ 51c:	cf 91       	pop	r28
+ 51e:	df 91       	pop	r29
+ 520:	08 95       	ret
 
-000004c0 <hdInit>:
-
+00000522 <hdInit>:
+#include "uart.h"
 
 
 
 void hdInit(void)
 {
- 4c0:	df 93       	push	r29
- 4c2:	cf 93       	push	r28
- 4c4:	cd b7       	in	r28, 0x3d	; 61
- 4c6:	de b7       	in	r29, 0x3e	; 62
+ 522:	df 93       	push	r29
+ 524:	cf 93       	push	r28
+ 526:	cd b7       	in	r28, 0x3d	; 61
+ 528:	de b7       	in	r29, 0x3e	; 62
 	//init leds port
 	DDRB = 0xff; 
- 4c8:	e7 e3       	ldi	r30, 0x37	; 55
- 4ca:	f0 e0       	ldi	r31, 0x00	; 0
- 4cc:	8f ef       	ldi	r24, 0xFF	; 255
- 4ce:	80 83       	st	Z, r24
+ 52a:	e7 e3       	ldi	r30, 0x37	; 55
+ 52c:	f0 e0       	ldi	r31, 0x00	; 0
+ 52e:	8f ef       	ldi	r24, 0xFF	; 255
+ 530:	80 83       	st	Z, r24
 	//enable all interrupts
 	sei();
- 4d0:	78 94       	sei
+ 532:	78 94       	sei
 	//init Uart
 	uartInit();	
- 4d2:	0e 94 69 00 	call	0xd2	; 0xd2 <uartInit>
+ 534:	0e 94 69 00 	call	0xd2	; 0xd2 <uartInit>
 
 }
- 4d6:	cf 91       	pop	r28
- 4d8:	df 91       	pop	r29
- 4da:	08 95       	ret
+ 538:	cf 91       	pop	r28
+ 53a:	df 91       	pop	r29
+ 53c:	08 95       	ret
 
-000004dc <_exit>:
- 4dc:	f8 94       	cli
+0000053e <_exit>:
+ 53e:	f8 94       	cli
 
-000004de <__stop_program>:
- 4de:	ff cf       	rjmp	.-2      	; 0x4de <__stop_program>
+00000540 <__stop_program>:
+ 540:	ff cf       	rjmp	.-2      	; 0x540 <__stop_program>

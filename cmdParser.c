@@ -6,24 +6,25 @@
 
 #include "hardware.h"
 #include "uart.h"
-#define CP_CMD_NORMALE 0xf1
-#define CP_CMD_ARRET   0xf0
+
+#define CP_CMD_NORMALE 0xF1
+#define CP_CMD_ARRET   0xF0
 
 typedef enum eCPState
 {
 	CP_SYNC_STATE,
-	CP_SET_VITESSE_STATE,
-	CP_SET_ANGLE_STATE,
+	CP_GET_VITESSE_STATE,
+	CP_GET_ANGLE_STATE,
 	CP_ARRET_STATE,
-	CP_ECHO_STATE
+	CP_RUN_STATE
 }tCPState;
 
-
-U8 cPState=CP_SYNC_STATE;
-U8 cPCmdValue=0;
-U8 cPVitesseValue=0;
-U8 cPAngleValue=0;
-U8 data;
+//variables locales
+U8 cPState			=CP_SYNC_STATE;
+U8 cPCmdValue		=0;
+U8 cPVitesseValue	=0;
+U8 cPAngleValue		=0;
+U8 data				=0;
 
 
 
@@ -35,52 +36,61 @@ void cPMainCmdParser(void)
 	if(uartGetRxSize())
 	{
 		data=uartGetByte();
- 		switch(cPState)
+ 	  	switch(cPState)
  		{
- 		case CP_SYNC_STATE:
-			if(data==CP_CMD_NORMALE||data==CP_CMD_ARRET)
-			{			
+	 		case CP_SYNC_STATE:
+
+				if(data==CP_CMD_NORMALE||data==CP_CMD_ARRET)
+				{			
+					uartSendByte(data);
+					cPCmdValue=data;
+					cPState=CP_GET_VITESSE_STATE;
+				}
+
+			break;
+
+			case CP_GET_VITESSE_STATE:
+			
+				if( (cPVitesseValue!=data) && (data==0) )
+					dbgSendString("vitesse=0");
+
+				cPVitesseValue=data;
 				uartSendByte(data);
-				cPCmdValue=data;
-				cPState=CP_SET_VITESSE_STATE;
-			}
-		break;
+				cPState=CP_GET_ANGLE_STATE;			
 
-		case CP_SET_VITESSE_STATE:
-			
-			if(cPVitesseValue!=data&&data==0)
-				dbgSendString("vitesse=0");
-
-			cPVitesseValue=data;
-			uartSendByte(data);
-			cPState=CP_SET_ANGLE_STATE;
-			
-			
-
-		break;
+			break;
 
 
-		case CP_SET_ANGLE_STATE:
-			cPAngleValue=data;
-			uartSendByte(data);
-			cPState=CP_SYNC_STATE;
-			PORTB=~cPAngleValue;
+			case CP_GET_ANGLE_STATE:
 
+				cPAngleValue=data;
+				uartSendByte(data);
 
-		break;
+				if(cPCmdValue==CP_CMD_NORMALE)
+					cPState=CP_RUN_STATE;
+				else
+					cPState=CP_ARRET_STATE;
+			break;
 
-		case CP_ARRET_STATE:
+			case CP_ARRET_STATE:
 
-			cPState=CP_SYNC_STATE;
-			dbgSendString("arret");
+				cPState=CP_SYNC_STATE;
+			//	dbgSendString("arret");
+				PORTB=0x55;
 
+			break;
 
+			case CP_RUN_STATE:
 
-		break;
+				cPState=CP_SYNC_STATE;
+			//	dbgSendString("run");
+				PORTB=~cPAngleValue;
 
-		default:
-			cPState=CP_SYNC_STATE;
-		break;
+			break;
+
+			default:
+				cPState=CP_SYNC_STATE;
+			break;
 
 
  		}

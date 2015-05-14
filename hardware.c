@@ -9,7 +9,6 @@
 
 
 
-
 void hdInit(void)
 {
 	//init leds port

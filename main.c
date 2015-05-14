@@ -18,7 +18,7 @@ int main( void )
 {
 
 	hdInit();
-	dbgSendString("Reset!!!");
+	dbgSendRobotString("Reset");
 
 	while(1)
 	{

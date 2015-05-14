@@ -34,7 +34,7 @@ void uartRxRoutine(void);
 void uartInitBuffers(void);
 
 /*
- Initialisation des var pour les FIFOS
+ Initialisation des variables pour les FIFOS
 */
 void uartInitBuffers(void)
 {

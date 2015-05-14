@@ -18,8 +18,11 @@
 
 void dbgSendString(U8 *buf)
 {	
+		//SEND START BYTE
 		uartSendByte(0xFE);
+		//SEND STRING
 		uartSendString(buf);
+		//SEND END BYTE
 		uartSendByte(0xFF);
 }
 

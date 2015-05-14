@@ -1,10 +1,7 @@
 /*
  ELE542 
-
  Jonathan Lapointe LAPJ05108303
  Charles Trépanier 
-
-
 */
 
 
@@ -19,7 +16,7 @@
 #define UART_BAUD_RATE      9600      /* 9600 baud */
 #define UART_BAUD_SELECT (F_CPU/(UART_BAUD_RATE*16l)-1)
 
-//Variable globales locales
+//Variables locales
 
 //Variables pour les buffers
 U8 uartRxBuffer[UART_RX_BUFFER_SIZE];
@@ -76,7 +73,7 @@ void uartTxRoutine(void)
 		UDR = uartTxBuffer[uartTxOutPtr];      
 		uartTxOutPtr++;
 		uartTxSize--;
-		//remet à zéro si jamais la taille du buffer 
+		//remet à zéro si jamais la taille du buffer est dépassé
 		if(uartTxOutPtr>(UART_TX_BUFFER_SIZE-1))
 	 		uartTxOutPtr=0;
 	}
@@ -96,6 +93,7 @@ void uartRxRoutine(void)
 	uartRxBuffer[uartRxInPtr] = UDR;        
 	uartRxInPtr++;
 	uartRxSize++;
+	//remet à zéro si jamais la taille du buffer est dépassé
 	if(uartRxInPtr>(UART_RX_BUFFER_SIZE-1))
 			uartRxInPtr=0;
 }

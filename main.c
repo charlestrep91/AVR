@@ -10,24 +10,20 @@
 
 #include "hardware.h"
 #include "dbgCmd.h"
-#include "uart.h"
+#include "cmdParser.h"
 
 
 
 int main( void )
 {
 
-U32 i;
-DDRB = 0xff; 
-sei();
-uartInit();
+	hdInit();
+	dbgSendString("Reset!!!");
 
-for(;;)
-{
-
-	//dbgSendString("allo debugdebug");
-	cPMainCmdParser();
-}
+	while(1)
+	{
+		cPMainCmdParser();
+	}
 
 
 }

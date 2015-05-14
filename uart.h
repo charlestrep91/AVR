@@ -1,10 +1,7 @@
 /*
  ELE542 
-
  Jonathan Lapointe LAPJ05108303
  Charles Trépanier 
-
-
 */
 
 
@@ -12,7 +9,8 @@
 #define UART_H
 
 #include "hardware.h"
-													
+
+//grandeur des FIFO (RX/TX)													
 #define UART_RX_BUFFER_SIZE 60
 #define UART_TX_BUFFER_SIZE 60
 

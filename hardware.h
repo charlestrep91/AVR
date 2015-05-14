@@ -21,7 +21,7 @@
 #include <avr/interrupt.h>
 #include <avr/signal.h>
 
-
+//Definition des type de var declarés dans le code
 #define U8  unsigned char 
 #define U16 unsigned int  
 #define S8  signed   char 
@@ -29,7 +29,10 @@
 #define U32 long
 
 
-
+/*
+	initialisation des peripheriques 
+*/
+void hdInit(void);
 
 
 

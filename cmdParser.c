@@ -1,10 +1,7 @@
 /*
  ELE542 
-
  Jonathan Lapointe LAPJ05108303
  Charles Trépanier 
-
-
 */
 
 #include "hardware.h"
@@ -14,17 +11,19 @@
 
 typedef enum eCPState
 {
-CP_SYNC_STATE,
-CP_SET_VITESSE_STATE,
-CP_SET_ANGLE_STATE,
-CP_ARRET_STATE,
-CP_ECHO_STATE
+	CP_SYNC_STATE,
+	CP_SET_VITESSE_STATE,
+	CP_SET_ANGLE_STATE,
+	CP_ARRET_STATE,
+	CP_ECHO_STATE
 }tCPState;
 
+
 U8 cPState=CP_SYNC_STATE;
-U8 cPCmdValue;
-U8 cPVitesseValue;
-U8 cPAngleValue;
+U8 cPCmdValue=0;
+U8 cPVitesseValue=0;
+U8 cPAngleValue=0;
+U8 data;
 
 
 
@@ -32,35 +31,31 @@ U8 cPAngleValue;
 
 void cPMainCmdParser(void)
 {
-U8 data;
+
 	if(uartGetRxSize())
 	{
 		data=uartGetByte();
  		switch(cPState)
  		{
  		case CP_SYNC_STATE:
-
-			if(data==CP_CMD_NORMALE)
-			{
+			if(data==CP_CMD_NORMALE||data==CP_CMD_ARRET)
+			{			
+				uartSendByte(data);
+				cPCmdValue=data;
 				cPState=CP_SET_VITESSE_STATE;
-				uartSendByte(data);
 			}
-			else if(data==CP_CMD_ARRET)
-			{
-				cPState=CP_ARRET_STATE;
-				uartSendByte(data);
-			}
-			cPCmdValue=data;
-
 		break;
 
 		case CP_SET_VITESSE_STATE:
+			
+			if(cPVitesseValue!=data&&data==0)
+				dbgSendString("vitesse=0");
 
 			cPVitesseValue=data;
 			uartSendByte(data);
 			cPState=CP_SET_ANGLE_STATE;
-			PORTB=cPVitesseValue;
-		//	dbgSendString("vitesse");
+			
+			
 
 		break;
 
@@ -69,14 +64,16 @@ U8 data;
 			cPAngleValue=data;
 			uartSendByte(data);
 			cPState=CP_SYNC_STATE;
+			PORTB=~cPAngleValue;
 
 
 		break;
 
 		case CP_ARRET_STATE:
-			uartSendByte(data);
 
 			cPState=CP_SYNC_STATE;
+			dbgSendString("arret");
+
 
 
 		break;

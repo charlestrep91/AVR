@@ -8,14 +8,12 @@ MCU = atmega32
 TARGET = Robot.elf
 CC = avr-gcc
 
-CPP = avr-g++
-
 ## Options common to compile, link and assembly rules
 COMMON = -mmcu=$(MCU)
 
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -std=gnu99 -DF_CPU=16000000UL -O0 -fsigned-char
+CFLAGS += -Wall -gdwarf-2 -std=gnu99         -DF_CPU=16000000UL -O0 -fsigned-char
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 
 ## Assembly specific flags
@@ -40,17 +38,22 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 INCLUDES = -I"C:\WinAVR-20100110" 
 
 ## Objects that must be built in order to link
-OBJECTS = main.o uart.o 
+OBJECTS = main.o uart.o dbgCmd.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
 
 ## Build
-all: $(TARGET) Robot.hex Robot.eep Robot.lss## Compile
+all: $(TARGET) Robot.hex Robot.eep Robot.lss size
+
+## Compile
 main.o: ../main.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 uart.o: ../uart.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+dbgCmd.o: ../dbgCmd.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link
@@ -66,6 +69,10 @@ $(TARGET): $(OBJECTS)
 %.lss: $(TARGET)
 	avr-objdump -h -S $< > $@
 
+size: ${TARGET}
+	@echo
+	@avr-size -C --mcu=${MCU} ${TARGET}
+
 ## Clean target
 .PHONY: clean
 clean:
@@ -73,5 +80,5 @@ clean:
 
 
 ## Other dependencies
--include $(shell mkdir dep 2>NUL) $(wildcard dep/*)
+-include $(shell mkdir dep 2>/dev/null) $(wildcard dep/*)
 

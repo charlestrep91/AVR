@@ -1,4 +1,4 @@
-uart.o: ../uart.c ../uart.h ../hardware.h \
+dbgCmd.o: ../dbgCmd.c ../dbgCmd.h ../hardware.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/io.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/sfr_defs.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/inttypes.h \
@@ -10,9 +10,9 @@ uart.o: ../uart.c ../uart.h ../hardware.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/fuse.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/lock.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/interrupt.h \
-  c:/winavr-20081205/lib/gcc/../../avr/include/avr/signal.h
+  c:/winavr-20081205/lib/gcc/../../avr/include/avr/signal.h ../uart.h
 
-../uart.h:
+../dbgCmd.h:
 
 ../hardware.h:
 
@@ -39,3 +39,5 @@ c:/winavr-20081205/lib/gcc/../../avr/include/avr/lock.h:
 c:/winavr-20081205/lib/gcc/../../avr/include/avr/interrupt.h:
 
 c:/winavr-20081205/lib/gcc/../../avr/include/avr/signal.h:
+
+../uart.h:

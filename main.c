@@ -1,15 +1,15 @@
+/*
+ ELE542 
+
+ Jonathan Lapointe LAPJ05108303
+ Charles Trépanier 
 
 
-
-
-
-
-
-
-
+*/
 
 
 #include "hardware.h"
+#include "dbgCmd.h"
 #include "uart.h"
 
 
@@ -18,20 +18,14 @@ int main( void )
 {
 
 U32 i;
-U8 data;
 DDRB = 0xff; 
 sei();
 uartInit();
 
 for(;;)
 {
-	if(uartGetRxSize())
-	{
-		data=uartGetByte();
-		PORTB=data;
-		uartSendString("CHAR : ",7);
-		uartSendByte(data);
-	}
+
+		dbgSendString("allo debugdebug");
 	for(i=0;i<0xffff;i++);
 	
 }

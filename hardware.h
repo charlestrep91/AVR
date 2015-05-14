@@ -1,6 +1,8 @@
 /*
- 
+ ELE542 
 
+ Jonathan Lapointe LAPJ05108303
+ Charles Trépanier 
 
 
 */
@@ -12,7 +14,8 @@
 
 #ifndef HARDWARE_H
 #define HARDWARE_H
-													
+
+												
 
 #include <avr/io.h>
 #include <avr/interrupt.h>

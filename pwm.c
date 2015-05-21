@@ -36,7 +36,7 @@ void pwmSetDutyValue(U8 value)
 
 void pwmCalculPwm(void)
 {
-	dbgSendDbgString("pwm");
+//	dbgSendDbgString("pwm");
 
 }
 

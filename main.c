@@ -19,6 +19,7 @@ int main( void )
 	hdInit();
 	pwmInit();
 	dbgSendRobotString("Reset");
+	PORTB=0x55;
 
 	while(1)
 	{

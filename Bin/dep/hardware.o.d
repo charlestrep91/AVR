@@ -9,8 +9,7 @@ hardware.o: ../hardware.c ../hardware.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/version.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/fuse.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/lock.h \
-  c:/winavr-20081205/lib/gcc/../../avr/include/avr/interrupt.h \
-  c:/winavr-20081205/lib/gcc/../../avr/include/avr/signal.h ../uart.h
+  c:/winavr-20081205/lib/gcc/../../avr/include/avr/interrupt.h ../uart.h
 
 ../hardware.h:
 
@@ -35,7 +34,5 @@ c:/winavr-20081205/lib/gcc/../../avr/include/avr/fuse.h:
 c:/winavr-20081205/lib/gcc/../../avr/include/avr/lock.h:
 
 c:/winavr-20081205/lib/gcc/../../avr/include/avr/interrupt.h:
-
-c:/winavr-20081205/lib/gcc/../../avr/include/avr/signal.h:
 
 ../uart.h:

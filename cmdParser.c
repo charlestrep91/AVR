@@ -6,6 +6,7 @@
 
 #include "hardware.h"
 #include "uart.h"
+#include "dbgCmd.h"
 
 #define CP_CMD_NORMALE 0xF1
 #define CP_CMD_ARRET   0xF0

@@ -9,9 +9,9 @@
 
 #ifndef PWM_H
 #define PWM_H
+#include "hardware.h"
 
-
-
+void pwmInit(void);
 
 
 

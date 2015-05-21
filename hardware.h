@@ -19,7 +19,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <avr/signal.h>
+//#include <avr/signal.h>
 
 //Definition des type de var declarés dans le code
 #define U8  unsigned char 

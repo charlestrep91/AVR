@@ -1,4 +1,4 @@
-dbgCmd.o: ../dbgCmd.c ../dbgCmd.h ../hardware.h \
+pwm.o: ../pwm.c ../pwm.h ../hardware.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/io.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/sfr_defs.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/inttypes.h \
@@ -9,9 +9,10 @@ dbgCmd.o: ../dbgCmd.c ../dbgCmd.h ../hardware.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/version.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/fuse.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/lock.h \
-  c:/winavr-20081205/lib/gcc/../../avr/include/avr/interrupt.h ../uart.h
+  c:/winavr-20081205/lib/gcc/../../avr/include/avr/interrupt.h \
+  ../dbgCmd.h
 
-../dbgCmd.h:
+../pwm.h:
 
 ../hardware.h:
 
@@ -37,4 +38,4 @@ c:/winavr-20081205/lib/gcc/../../avr/include/avr/lock.h:
 
 c:/winavr-20081205/lib/gcc/../../avr/include/avr/interrupt.h:
 
-../uart.h:
+../dbgCmd.h:

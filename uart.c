@@ -186,13 +186,13 @@ U8 uartGetTxSize(void)
 
 
 //--INTERRUPTS LOOPS--
-SIGNAL(SIG_UART_TRANS)      
+ISR(UART0_TX_vect)      
 /* signal handler for uart txd ready interrupt */
 {
     uartTxRoutine();
 }
 
-SIGNAL(SIG_UART_RECV)      
+ISR(USART0_RX_vect)
 /* signal handler for receive complete interrupt */
 {
 	uartRxRoutine();   

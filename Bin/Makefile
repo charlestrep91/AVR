@@ -38,7 +38,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 INCLUDES = -I"C:\WinAVR-20100110" 
 
 ## Objects that must be built in order to link
-OBJECTS = main.o uart.o dbgCmd.o cmdParser.o hardware.o 
+OBJECTS = main.o uart.o dbgCmd.o cmdParser.o hardware.o pwm.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -60,6 +60,9 @@ cmdParser.o: ../cmdParser.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 hardware.o: ../hardware.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+pwm.o: ../pwm.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

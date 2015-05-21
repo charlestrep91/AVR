@@ -9,6 +9,7 @@
 #include "hardware.h"
 #include "dbgCmd.h"
 #include "cmdParser.h"
+#include "pwm.h"
 
 
 
@@ -16,6 +17,7 @@ int main( void )
 {
 
 	hdInit();
+	pwmInit();
 	dbgSendRobotString("Reset");
 
 	while(1)

@@ -10,8 +10,7 @@ main.o: ../main.c ../hardware.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/fuse.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/lock.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/interrupt.h \
-  c:/winavr-20081205/lib/gcc/../../avr/include/avr/signal.h ../dbgCmd.h \
-  ../cmdParser.h
+  ../dbgCmd.h ../cmdParser.h ../pwm.h
 
 ../hardware.h:
 
@@ -37,8 +36,8 @@ c:/winavr-20081205/lib/gcc/../../avr/include/avr/lock.h:
 
 c:/winavr-20081205/lib/gcc/../../avr/include/avr/interrupt.h:
 
-c:/winavr-20081205/lib/gcc/../../avr/include/avr/signal.h:
-
 ../dbgCmd.h:
 
 ../cmdParser.h:
+
+../pwm.h:

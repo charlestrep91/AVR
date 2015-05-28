@@ -7,9 +7,12 @@
 #include "hardware.h"
 #include "uart.h"
 #include "dbgCmd.h"
+#include "moteur.h"
 
 #define CP_CMD_NORMALE 0xF1
 #define CP_CMD_ARRET   0xF0
+
+
 
 typedef enum eCPState
 {
@@ -76,8 +79,8 @@ void cPMainCmdParser(void)
 			case CP_ARRET_STATE:
 
 				cPState=CP_SYNC_STATE;
+				moteurControl(cPVitesseValue,0,M_ARRET);
 			//	dbgSendDbgString("arret");
-				PORTB=0x55;
 
 			break;
 
@@ -85,7 +88,8 @@ void cPMainCmdParser(void)
 
 				cPState=CP_SYNC_STATE;
 			//	dbgSendDbgString("run");
-				PORTB=~cPAngleValue;
+			  //	PORTB=~cPAngleValue;
+				moteurControl(cPVitesseValue,0,M_MARCHE);
 
 			break;
 

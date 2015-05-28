@@ -1,4 +1,4 @@
-pwm.o: ../pwm.c ../pwm.h ../hardware.h \
+moteur.o: ../moteur.c ../moteur.h ../hardware.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/io.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/sfr_defs.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/inttypes.h \
@@ -9,10 +9,9 @@ pwm.o: ../pwm.c ../pwm.h ../hardware.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/version.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/fuse.h \
   c:/winavr-20081205/lib/gcc/../../avr/include/avr/lock.h \
-  c:/winavr-20081205/lib/gcc/../../avr/include/avr/interrupt.h \
-  ../dbgCmd.h ../moteur.h
+  c:/winavr-20081205/lib/gcc/../../avr/include/avr/interrupt.h ../pwm.h
 
-../pwm.h:
+../moteur.h:
 
 ../hardware.h:
 
@@ -38,6 +37,4 @@ c:/winavr-20081205/lib/gcc/../../avr/include/avr/lock.h:
 
 c:/winavr-20081205/lib/gcc/../../avr/include/avr/interrupt.h:
 
-../dbgCmd.h:
-
-../moteur.h:
+../pwm.h:

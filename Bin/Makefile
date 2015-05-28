@@ -13,7 +13,7 @@ COMMON = -mmcu=$(MCU)
 
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -std=gnu99     -DF_CPU=16000000UL -O0 -fsigned-char
+CFLAGS += -Wall -gdwarf-2 -std=gnu99                 -DF_CPU=16000000UL -O0 -fsigned-char
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 
 ## Assembly specific flags
@@ -35,10 +35,10 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Include Directories
-INCLUDES = -I"C:\WinAVR-20100110" 
+INCLUDES = -I"C:\Workspace\ELE542\..\..\WinAVR-20081205" 
 
 ## Objects that must be built in order to link
-OBJECTS = main.o uart.o dbgCmd.o cmdParser.o hardware.o pwm.o 
+OBJECTS = main.o uart.o dbgCmd.o cmdParser.o hardware.o pwm.o moteur.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -63,6 +63,9 @@ hardware.o: ../hardware.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 pwm.o: ../pwm.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+moteur.o: ../moteur.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

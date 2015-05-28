@@ -6,6 +6,7 @@
 */
 #ifndef __MOTOR_H_
 #define __MOTOR_H_
+#include "hardware.h"
 
 #define Pi      (3.1415926535897932384626433832795)
 #define RAYON   (9.525)
@@ -21,6 +22,11 @@
 
 #define Fpwm (10000)
 
-void CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd, float *Duty_G, float *Duty_D);
+#define M_MARCHE 0
+#define M_NEUTRE 1
+#define M_ARRET  2
 
+void CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd, float *Duty_G, float *Duty_D);
+void moteurAsservissement(U16 vitG,U16 vitD);
+void moteurControl(U8 vitesse,U8 angle,U8 mode);
 #endif

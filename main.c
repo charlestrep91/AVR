@@ -15,11 +15,13 @@
 
 int main( void )
 {
-
+	tREG08 portBREG;
 	hdInit();
 	pwmInit();
 	dbgSendRobotString("Reset");
-	PORTB=0x55;
+	portBREG.byte=0xff;
+	portBREG.bit.b0=0;
+	PORTB=portBREG.byte;
 
 	while(1)
 	{

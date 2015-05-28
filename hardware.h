@@ -28,7 +28,21 @@
 #define S16 signed   int  
 #define U32 long
 
-
+typedef union uREG08    /*8 bit register with byte and bit access*/
+  {
+  U8  byte;           /*access whole register e.g. var.byte   = 0xFF;*/
+  struct                /*access bit at a time  e.g. var.bit._7 = 1;   */
+    {
+    U8 b0 :1;
+    U8 b1 :1;
+    U8 b2 :1;
+    U8 b3 :1;
+    U8 b4 :1;
+    U8 b5 :1;
+    U8 b6 :1;
+    U8 b7 :1;
+    }bit;
+  }tREG08;
 /*
 	initialisation des peripheriques 
 */

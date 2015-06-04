@@ -16,12 +16,14 @@
 int main( void )
 {
 	tREG08 portBREG;
+	cli();					//disable interrupts
 	hdInit();
 	pwmInit();
 	dbgSendRobotString("Reset");
 	portBREG.byte=0xff;
 	portBREG.bit.b0=0;
 	PORTB=portBREG.byte;
+	sei();					//enable interrupts
 
 	while(1)
 	{

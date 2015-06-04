@@ -14,8 +14,6 @@ void hdInit(void)
 	//init leds port
 	DDRB = 0xff; 
 	DDRD = 0xfe;
-	//enable all interrupts
-	sei();
 	//init Uart
 	uartInit();	
 

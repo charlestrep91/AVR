@@ -196,5 +196,5 @@ ISR(USART_TXC_vect)
 ISR(USART_RXC_vect)
 /* signal handler for receive complete interrupt */
 {
-	uartRxRoutine();   
+	uartRxRoutine();  
 }

@@ -30,15 +30,15 @@ void dbgSendDbgString(U8 *buf)
 void dbgSendDbgU16ToDec(U16 value)
 {
 	U8 buffer[5]={0,0,0,0,0};
-	U8 i=3;	
+	U8 i=4;	
 	while(value!=0)
 	{
-		buffer[i--]=value%10+0x30;
+		buffer[--i]=value%10+0x30;
 		value=value/10;
 	}
 
 	buffer[4]=0;
-	uartSendString(buffer);
+	dbgSendDbgString(&buffer[i]);
 }
 
 void dbgSendRobotString(U8 *buf)

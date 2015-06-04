@@ -26,7 +26,11 @@
 #define M_NEUTRE 1
 #define M_ARRET  2
 
+#define VITESSEMAX 	200
+#define	ANGLEMAX	180
+
+
 void CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd, float *Duty_G, float *Duty_D);
 void moteurAsservissement(U16 vitG,U16 vitD);
-void moteurControl(U8 vitesse,U8 angle,U8 mode);
+U8 moteurControl(U8 vitesse,U8 angle,U8 mode);
 #endif

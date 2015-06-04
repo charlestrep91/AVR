@@ -35,7 +35,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Include Directories
-INCLUDES = -I"C:\Workspace\ELE542\..\..\WinAVR-20081205" 
+INCLUDES = -I"C:\Users\Charles\Documents\ELE542\Robot\..\..\WinAVR-20081205" 
 
 ## Objects that must be built in order to link
 OBJECTS = main.o uart.o dbgCmd.o cmdParser.o hardware.o pwm.o moteur.o 

@@ -56,7 +56,9 @@ void cPMainCmdParser(void)
 			case CP_GET_VITESSE_STATE:
 			
 				if( (cPVitesseValue!=data) && (data==0) )
-					dbgSendDbgString("vitesse=0");
+				{
+//					dbgSendDbgString("vitesse=0");
+				}
 
 				cPVitesseValue=data;
 				uartSendByte(data);
@@ -79,7 +81,7 @@ void cPMainCmdParser(void)
 			case CP_ARRET_STATE:
 
 				cPState=CP_SYNC_STATE;
-				moteurControl(cPVitesseValue,0,M_ARRET);
+				(void)moteurControl(cPVitesseValue,0,M_ARRET);
 			//	dbgSendDbgString("arret");
 
 			break;
@@ -89,7 +91,7 @@ void cPMainCmdParser(void)
 				cPState=CP_SYNC_STATE;
 			//	dbgSendDbgString("run");
 			  //	PORTB=~cPAngleValue;
-				moteurControl(cPVitesseValue,0,M_MARCHE);
+				(void)moteurControl(cPVitesseValue,0,M_MARCHE);
 
 			break;
 

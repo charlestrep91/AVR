@@ -1,20 +1,21 @@
 #include "moteur.h"
 #include "hardware.h"
 #include "pwm.h"
+#include "dbgCmd.h"
 
-U8 lastVitesse=0;
+U8 lastVitesse=0;	
 U8 lastAngle=0;
 U8 lastVitG=0;
 U8 lastVitD=0;
 U8 mMode=0;
 
-float mVitesse_D=0;
-float mAngle_D=0;
-float mVg=0;
-float mVd=0;
-float mDuty_G=0;
-float mDuty_D=0;
-tREG08 mPortDREG;
+float mVitesse_D=0;		//vitesse formattee en float pour envoyer a la fonction CalculPWM
+float mAngle_D=0;		//angle formatte en float pour envoyer a la fonction CalculPWM
+float mVg=0;			//valeur ADC formatte en float pour envoyer a la fonction CalculPWM
+float mVd=0;			//valeur ADC formatte en float pour envoyer a la fonction CalculPWM
+float mDuty_G=0;		//duty cycle retourne par la fonction CalculPWM
+float mDuty_D=0;		//duty cycle retourne par la fonction CalculPWM
+tREG08 mPortDREG;		//
 #define M_DIR_G1 mPortDREG.bit.b2
 #define M_DIR_G2 mPortDREG.bit.b3
 #define M_DIR_D1 mPortDREG.bit.b6
@@ -69,10 +70,17 @@ void CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd, float *Duty_G
 	*Duty_G = (*Duty_G > 0.99) ? 0.99 : ((*Duty_G < -0.99) ? -0.99 : *Duty_G);	
 }
 
-void moteurControl(U8 vitesse,U8 angle,U8 mode)
+U8 moteurControl(U8 vitesse,U8 angle,U8 mode)
 {
-U16 dutyValD;
-U16 dutyValG;
+	U16 dutyValD;
+	U16 dutyValG;
+
+	if(vitesse>VITESSEMAX || angle>ANGLEMAX)	//verifies if received value is not within accepted range
+	{
+		dbgSendDbgString("ERROR: Value out of range");
+		return 1;		
+	}
+
     if(mode!=M_MARCHE)
 	{
 		switch(mode)
@@ -142,16 +150,20 @@ U16 dutyValG;
 		dutyValD=(U16)((float)mDuty_D*10000);
 		dutyValG=(U16)((float)mDuty_D*10000);
 		pwmSetDutyValue(dutyValD,dutyValG,mPortDREG.byte);
+//		dbgSendDbgU16ToDec(dutyValD);
+//		dbgSendDbgU16ToDec(dutyValG);
 		lastVitesse=vitesse;
 		lastAngle=angle;
 
 	}
+
+	return 0;
 }
 
 void moteurAsservissement(U16 vitG,U16 vitD)
 {
-U8 dutyValD;
-U8 dutyValG;
+	U8 dutyValD;
+	U8 dutyValG;
 	if((vitG!=lastVitG || vitD!=lastVitD)&&mMode==M_MARCHE)
 	{
 		if(vitG!=lastVitG)

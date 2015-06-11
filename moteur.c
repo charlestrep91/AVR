@@ -118,7 +118,7 @@ U8 moteurControl(U8 vitesse,U8 angle,U8 mode)
 			mAngle_D=(float)((angle<<1)*Pi)/180;
 		}
 			
-		CalculPWM(mVitesse_D, 0,mVitesse_D,mVitesse_D,&mDuty_G,&mDuty_D);
+		CalculPWM(mVitesse_D, mAngle_D,mVg,mVd,&mDuty_G,&mDuty_D);
 
 		//MODE AVANT
 		if(mDuty_G<0)

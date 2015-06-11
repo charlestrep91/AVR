@@ -81,7 +81,7 @@ void cPMainCmdParser(void)
 			case CP_ARRET_STATE:
 
 				cPState=CP_SYNC_STATE;
-				(void)moteurControl(cPVitesseValue,0,M_ARRET);
+				(void)moteurControl(cPVitesseValue,cPAngleValue,M_ARRET);
 			//	dbgSendDbgString("arret");
 
 			break;
@@ -91,7 +91,7 @@ void cPMainCmdParser(void)
 				cPState=CP_SYNC_STATE;
 			//	dbgSendDbgString("run");
 			  //	PORTB=~cPAngleValue;
-				(void)moteurControl(cPVitesseValue,0,M_MARCHE);
+				(void)moteurControl(cPVitesseValue,cPAngleValue,M_MARCHE);
 
 			break;
 

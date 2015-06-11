@@ -27,6 +27,7 @@
 #define S8  signed   char 
 #define S16 signed   int  
 #define U32 long
+#define S32 signed long
 
 typedef union uREG08    /*8 bit register with byte and bit access*/
   {
@@ -46,7 +47,7 @@ typedef union uREG08    /*8 bit register with byte and bit access*/
 /*
 	initialisation des peripheriques 
 */
-void hdInit(void);
+void hwInit(void);
 
 
 

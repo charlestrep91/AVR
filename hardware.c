@@ -8,13 +8,13 @@
 #include "uart.h"
 
 
+#define HW_OUTPUT  1
+#define HW_INPUT   0
 
-void hdInit(void)
+void hwInit(void)
 {
 	//init leds port
 	DDRB = 0xff; 
 	DDRD = 0xfe;
-	//init Uart
-	uartInit();	
-
+	DDRA = 0x10;
 }

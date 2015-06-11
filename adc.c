@@ -56,11 +56,13 @@ ISR(ADC_vect)
 {
 //	dbgSendDbgString("adc isr");
 //	ADCSRA=(1<<ADEN)|(1<<ADSC)|(1<<ADATE)|(1<<ADIF)|(1<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);
+	adcPortAREG.byte=PINA;
 	if(adcMuxState==ADC_MOTEUR_DROIT)
 	{
 		//assignation de la valeur de mux pour la prochaine conversion
 		ADMUX=ADC_MUX_SETTTING|ADC_MOTEUR_GAUCHE;
 		adcMuxState=ADC_MOTEUR_GAUCHE;
+
 		if(ADC_DIR_GAUCHE_PIN==ADC_NEG_VALUE)
 			adcMoteurGAvg-=(((ADCH&0x03)<<8)|ADCL);
 		else
@@ -75,6 +77,7 @@ ISR(ADC_vect)
 		ADMUX=ADC_MUX_SETTTING|ADC_MOTEUR_DROIT;
 		adcMuxState=ADC_MOTEUR_DROIT;		
 		adcMoteurGAvg+=(ADCH<<8)|ADCL;
+
 		if(ADC_DIR_DROIT_PIN==ADC_NEG_VALUE)
 			adcMoteurDAvg-=(((ADCH&0x03)<<8)|ADCL);
 		else
@@ -87,7 +90,10 @@ ISR(ADC_vect)
 		//division par 256
 		adcMoteurGAvg=adcMoteurGAvg>>8;
 		adcMoteurDAvg=adcMoteurDAvg>>8;
+		//appel de la fonction dasservissement moteur
 		moteurAsservissement(adcMoteurGAvg,adcMoteurDAvg);
+		//Reset samples counter
+		adcNbSamples=0;
 
 	}
 }

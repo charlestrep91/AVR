@@ -20,6 +20,11 @@
 */
 void adcInit(void);
 
+
+/*
+	@fn void adcStartConversion(void)
+	@des demarre les lectures
+*/
 void adcStartConversion(void);
 
 

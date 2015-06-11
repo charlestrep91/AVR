@@ -160,7 +160,7 @@ U8 moteurControl(U8 vitesse,U8 angle,U8 mode)
 	return 0;
 }
 
-void moteurAsservissement(U16 vitG,U16 vitD)
+void moteurAsservissement(S16 vitG,S16 vitD)
 {
 	U8 dutyValD;
 	U8 dutyValG;
@@ -168,13 +168,13 @@ void moteurAsservissement(U16 vitG,U16 vitD)
 	{
 		if(vitG!=lastVitG)
 		{
-			mVg=(float)((float)vitG-511)/511;
+			mVg=(float)vitG/1023;
 			
 		}
 
 		if(vitD!=lastVitD)
 		{
-			mVd=(float)((float)vitD-511)/511;
+			mVd=(float)vitD/1023;
 		}
 			
 		CalculPWM(mVitesse_D, mAngle_D,mVg,mVd,&mDuty_G,&mDuty_D);

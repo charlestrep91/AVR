@@ -5,7 +5,6 @@
  Charles Trépanier 
 */
 #include "hardware.h"
-#include "uart.h"
 
 
 #define HW_OUTPUT  1

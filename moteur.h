@@ -31,6 +31,6 @@
 
 
 void CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd, float *Duty_G, float *Duty_D);
-void moteurAsservissement(U16 vitG,U16 vitD);
-U8 moteurControl(U8 vitesse,U8 angle,U8 mode);
+void moteurAsservissement(S16 vitG,S16 vitD);
+U8   moteurControl(U8 vitesse,U8 angle,U8 mode);
 #endif

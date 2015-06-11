@@ -39,6 +39,7 @@ void adcInit(void)
     SFIOR=0x0F&SFIOR;
 	ADMUX=ADC_MUX_SETTTING|(ADC_MOTEUR_GAUCHE);	
  	ADCSRA=(1<<ADEN)|(0<<ADSC)|(1<<ADATE)|(0<<ADIF)|(1<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);	
+
 	//init letat de la variable de lecture
    	adcMuxState=ADC_MOTEUR_GAUCHE;	
 }
@@ -59,9 +60,11 @@ void adcStartConversion(void)
 */
 ISR(ADC_vect)
 {
-    //affectation des valeurs du port à la variable de port
+    //affectation des valeurs du portA à la variable de port
 	adcPortAREG.byte=PINA;
+
 	//lecture du moteur Droit
+	//routine d'accumulation des valeurs
 	if(adcMuxState==ADC_MOTEUR_DROIT)
 	{
 		//assignation de la valeur de mux pour la prochaine conversion
@@ -78,6 +81,7 @@ ISR(ADC_vect)
 
 	}
 	//lecture du moteur Gauche
+	//routine d'accumulation des valeurs
 	else
 	{
 		//assignation de la valeur de mux pour la prochaine conversion
@@ -95,19 +99,22 @@ ISR(ADC_vect)
 	adcNbSamples++;
 
 	//512 valeurs echantillonnées totales, mais 256 valeurs pour chacun des moteurs
+	//routine de calcul de la moyenne et envoie a la fct d'asservisement moteur
 	if(adcNbSamples>=ADC_NB_SAMPLE_MAX)
 	{
 		//division par 256 
 		adcMoteurGAvg=adcMoteurGAvg>>8;
 		adcMoteurDAvg=adcMoteurDAvg>>8;
+
 		//appel de la fonction dasservissement moteur
 		moteurAsservissement((S16)adcMoteurGAvg,(S16)adcMoteurDAvg);
+
 		//reset des valeurs cumulés
 		adcMoteurGAvg=0;
 		adcMoteurDAvg=0;
+
 		//Reset samples counter
 		adcNbSamples=0;
-
 	}
 }
 

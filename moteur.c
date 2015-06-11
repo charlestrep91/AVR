@@ -5,8 +5,8 @@
 
 U8 lastVitesse=0;	
 U8 lastAngle=0;
-U8 lastVitG=0;
-U8 lastVitD=0;
+S16 lastVitG=0;
+S16 lastVitD=0;
 U8 mMode=0;
 
 float mVitesse_D=0;		//vitesse formattee en float pour envoyer a la fonction CalculPWM
@@ -177,7 +177,7 @@ void moteurAsservissement(S16 vitG,S16 vitD)
 			mVd=(float)vitD/1023;
 		}
 			
-		CalculPWM(mVitesse_D, mAngle_D,mVg,mVd,&mDuty_G,&mDuty_D);
+		CalculPWM(mVitesse_D,mAngle_D,mVg,mVd,&mDuty_G,&mDuty_D);
 
 		//MODE AVANT
 		if(mDuty_G<0)

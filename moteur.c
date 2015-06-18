@@ -9,6 +9,9 @@ S16 lastVitG=0;
 S16 lastVitD=0;
 U8 mMode=0;
 
+U16 dutyValD;
+U16 dutyValG;
+
 float mVitesse_D=0;		//vitesse formattee en float pour envoyer a la fonction CalculPWM
 float mAngle_D=0;		//angle formatte en float pour envoyer a la fonction CalculPWM
 float mVg=0;			//valeur ADC formatte en float pour envoyer a la fonction CalculPWM
@@ -20,6 +23,8 @@ tREG08 mPortDREG;		//
 #define M_DIR_G2 mPortDREG.bit.b3
 #define M_DIR_D1 mPortDREG.bit.b6
 #define M_DIR_D2 mPortDREG.bit.b7
+
+void CalculMoteur(void);
 
 
 void CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd, float *Duty_G, float *Duty_D)
@@ -71,41 +76,14 @@ void CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd, float *Duty_G
 }
 
 U8 moteurControl(U8 vitesse,U8 angle,U8 mode)
-{
-	U16 dutyValD;
-	U16 dutyValG;
-
+{	
 	if(vitesse>VITESSEMAX || angle>ANGLEMAX)	//verifies if received value is not within accepted range
 	{
 		dbgSendDbgString("ERROR: Value out of range");
 		return 1;		
 	}
-
-    if(mode!=M_MARCHE)
-	{
-		switch(mode)
-		{
-			case M_NEUTRE:
-			M_DIR_G1=0;
-			M_DIR_G2=0;
-			M_DIR_D1=0;
-			M_DIR_D2=0;
-
-			break;
-
-			//M_ARRET
-			default:  
-			M_DIR_G1=1;
-			M_DIR_G2=1;
-			M_DIR_D1=1;
-			M_DIR_D2=1;
-			break;
-			mMode=mode;
-		}
-		
-		pwmSetDutyValue(0,0,mPortDREG.byte);
-	}
-	else if(vitesse!=lastVitesse || angle!=lastAngle)
+	mMode=mode;	
+	if(vitesse!=lastVitesse || angle!=lastAngle)
 	{ 
 		if(vitesse!=lastVitesse)
 		{
@@ -117,54 +95,18 @@ U8 moteurControl(U8 vitesse,U8 angle,U8 mode)
 		{
 			mAngle_D=(float)((angle<<1)*Pi)/180;
 		}
-			
-		CalculPWM(mVitesse_D, mAngle_D,mVg,mVd,&mDuty_G,&mDuty_D);
 
-		//MODE AVANT
-		if(mDuty_G<0)
-		{
-			M_DIR_G1=0;
-			M_DIR_G2=1;
-			mDuty_G=mDuty_G*(-1);
-		}
-		//MODE ARRIERE	
-		else
-		{
-			M_DIR_G1=1;
-			M_DIR_G2=0;	
-		}	
-
-		//MODE AVANT
-		if(mDuty_D<0)
-		{
-			M_DIR_D1=0;
-			M_DIR_D2=1;
-			mDuty_D=mDuty_D*(-1);
-		}
-		//MODE ARRIERE	
-		else
-		{
-			M_DIR_D1=1;
-			M_DIR_D2=0;	
-		}
-		dutyValD=(U16)((float)mDuty_D*10000);
-		dutyValG=(U16)((float)mDuty_D*10000);
-		pwmSetDutyValue(dutyValD,dutyValG,mPortDREG.byte);
-//		dbgSendDbgU16ToDec(dutyValD);
-//		dbgSendDbgU16ToDec(dutyValG);
 		lastVitesse=vitesse;
 		lastAngle=angle;
 
 	}
-
 	return 0;
 }
 
 void moteurAsservissement(S16 vitG,S16 vitD)
 {
-	U8 dutyValD;
-	U8 dutyValG;
-	if((vitG!=lastVitG || vitD!=lastVitD)&&mMode==M_MARCHE)
+
+	if((vitG!=lastVitG || vitD!=lastVitD))
 	{
 		if(vitG!=lastVitG)
 		{
@@ -176,43 +118,79 @@ void moteurAsservissement(S16 vitG,S16 vitD)
 		{
 			mVd=(float)vitD/1023;
 		}
-			
-		CalculPWM(mVitesse_D,mAngle_D,mVg,mVd,&mDuty_G,&mDuty_D);
-
-		//MODE AVANT
-		if(mDuty_G<0)
-		{
-			M_DIR_G1=0;
-			M_DIR_G2=1;
-			mDuty_G=mDuty_G*(-1);
-		}
-		//MODE ARRIERE	
-		else
-		{
-			M_DIR_G1=1;
-			M_DIR_G2=0;	
-		}	
-
-		//MODE AVANT
-		if(mDuty_D<0)
-		{
-			M_DIR_D1=0;
-			M_DIR_D2=1;
-			mDuty_D=mDuty_D*(-1);
-		}
-		//MODE ARRIERE	
-		else
-		{
-			M_DIR_D1=1;
-			M_DIR_D2=0;	
-		}
-		dutyValD=mDuty_D*255;
-		dutyValG=mDuty_D*255;	
-		pwmSetDutyValue(dutyValD,dutyValG,mPortDREG.byte);
 		lastVitG=vitG;
 		lastVitD=vitD;
 	}
 
 
+
+
+
+}
+
+void CalculMoteur(void)
+{
+	   
+		//MODE AVANT
+		if(mMode!=M_MARCHE)
+		{
+			switch(mMode)
+			{
+				case M_NEUTRE:
+				M_DIR_G1=0;
+				M_DIR_G2=0;
+				M_DIR_D1=0;
+				M_DIR_D2=0;
+
+				break;
+
+				//M_ARRET
+				default:  
+				M_DIR_G1=1;
+				M_DIR_G2=1;
+				M_DIR_D1=1;
+				M_DIR_D2=1;
+				break;
+				
+			}
+			mDuty_G=0;
+			mDuty_D=0;
+			dutyValD=0;
+			dutyValG=0;
+		}
+		else
+		{
+			CalculPWM(mVitesse_D,mAngle_D,mVg,mVd,&mDuty_G,&mDuty_D);
+			//MODE ARRIERE
+			if(mDuty_G<0)
+			{
+				M_DIR_G1=0;
+				M_DIR_G2=1;
+				mDuty_G=mDuty_G*(-1);
+			}
+			//MODE AVANT
+			else
+			{
+				M_DIR_G1=1;
+				M_DIR_G2=0;	
+			}	
+
+			//MODE ARRIERE
+			if(mDuty_D<0)
+			{
+				M_DIR_D1=0;
+				M_DIR_D2=1;
+				mDuty_D=mDuty_D*(-1);
+			}
+			//MODE AVANT
+			else
+			{
+				M_DIR_D1=1;
+				M_DIR_D2=0;	
+			}
+			dutyValD=(U16)((float)mDuty_D*10000);
+			dutyValG=(U16)((float)mDuty_G*10000);
+		}	
+		pwmSetDutyValue(dutyValD,dutyValG,mPortDREG.byte);
 
 }

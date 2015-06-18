@@ -21,12 +21,13 @@
 //Variables pour les buffers
 U8 uartRxBuffer[UART_RX_BUFFER_SIZE];
 U8 uartTxBuffer[UART_TX_BUFFER_SIZE];
-U8 uartRxInPtr;
-U8 uartRxOutPtr;
-U8 uartTxInPtr;
-U8 uartTxOutPtr;
-U8 uartTxSize;
-U8 uartRxSize;
+//pointeurs et compteurs de données FIFOS
+volatile U8 uartRxInPtr;
+volatile U8 uartRxOutPtr;
+volatile U8 uartTxInPtr;
+volatile U8 uartTxOutPtr;
+volatile U8 uartTxSize;
+volatile U8 uartRxSize;
 
 //fonctions utilisées localement
 void uartTxRoutine(void);
@@ -70,12 +71,14 @@ void uartTxRoutine(void)
 {
 	if(uartTxSize)
 	{
-		UDR = uartTxBuffer[uartTxOutPtr];      
+		UDR = uartTxBuffer[uartTxOutPtr]; 
 		uartTxOutPtr++;
 		uartTxSize--;
 		//remet à zéro si jamais la taille du buffer est dépassé
 		if(uartTxOutPtr>(UART_TX_BUFFER_SIZE-1))
+		{
 	 		uartTxOutPtr=0;
+		}
 	}
 	else
 	{
@@ -90,7 +93,7 @@ void uartTxRoutine(void)
 */
 void uartRxRoutine(void)
 {
-	uartRxBuffer[uartRxInPtr] = UDR;        
+	uartRxBuffer[uartRxInPtr] = UDR;	
 	uartRxInPtr++;
 	uartRxSize++;
 	//remet à zéro si jamais la taille du buffer est dépassé
@@ -106,6 +109,7 @@ void uartSendString(U8 *buf)
 	U8 stringSize=0;
 
 	//loop tant que le caractere de fin n'est pas trouvé
+	
 	while((*buf!=UART_END_OF_STRING_CHAR) && (stringSize<UART_MAX_SIZE_STRING))
 	{
 		uartTxBuffer[uartTxInPtr]=*buf;
@@ -120,7 +124,8 @@ void uartSendString(U8 *buf)
 			uartTxInPtr=0;		
 	}
 
-	//envoie le premier byte pour démarrer l'interruption si UDRE est à 1
+	//envoie le premier byte pour démarrer l'interruption si UDRE est à 1	
+	
 	if(UCSRA&&(1<<UDRE))
    		 uartTxRoutine();
 
@@ -154,10 +159,11 @@ U8 uartGetByte(void)
 	{		
 		rxByte=uartRxBuffer[uartRxOutPtr];
 		uartRxOutPtr++;
+		uartRxSize--;
 		//remet à zéro si dépasse la taille du buffer 
 		if(uartRxOutPtr>(UART_RX_BUFFER_SIZE-1))
 			uartRxOutPtr=0;
-		uartRxSize--;
+		
 	}
 	else
 	{

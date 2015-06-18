@@ -11,6 +11,7 @@
 #include "uart.h"
 #include "hardware.h"
 #include <avr/interrupt.h>
+#include "dbgCmd.h"
 
 
 #define ADC_MOTEUR_GAUCHE 	0
@@ -26,8 +27,8 @@ volatile S32 adcMoteurDAvg	=0;
 volatile U16 adcNbSamples	=0;
 volatile tREG08 adcPortAREG;	
 
-#define ADC_DIR_GAUCHE_PIN adcPortAREG.bit.b0
-#define ADC_DIR_DROIT_PIN  adcPortAREG.bit.b1
+#define ADC_DIR_GAUCHE_PIN  adcPortAREG.bit.b0
+#define ADC_DIR_DROIT_PIN   adcPortAREG.bit.b1
 	
 
 /*
@@ -73,9 +74,9 @@ ISR(ADC_vect)
 
 		//addition ou soustraction de la valeur lue selon le bit de signe
 		if(ADC_DIR_GAUCHE_PIN==ADC_NEG_VALUE)
-			adcMoteurGAvg-=(((ADCH&0x03)<<8)|ADCL);
+			adcMoteurDAvg-=(((ADCH&0x03)<<8)|ADCL);
 		else
-			adcMoteurGAvg+=(((ADCH&0x03)<<8)|ADCL);
+			adcMoteurDAvg+=(((ADCH&0x03)<<8)|ADCL);
 
 	
 
@@ -90,9 +91,9 @@ ISR(ADC_vect)
 
 		//addition ou soustraction de la valeur lue selon le bit de signe
 		if(ADC_DIR_DROIT_PIN==ADC_NEG_VALUE)
-			adcMoteurDAvg-=(((ADCH&0x03)<<8)|ADCL);
+			adcMoteurGAvg-=(((ADCH&0x03)<<8)|ADCL);
 		else
-			adcMoteurDAvg+=(((ADCH&0x03)<<8)|ADCL);
+			adcMoteurGAvg+=(((ADCH&0x03)<<8)|ADCL);
 	}
 
 	//incrémente le compteur d'échantillon
@@ -100,20 +101,25 @@ ISR(ADC_vect)
 
 	//512 valeurs echantillonnées totales, mais 256 valeurs pour chacun des moteurs
 	//routine de calcul de la moyenne et envoie a la fct d'asservisement moteur
-	if(adcNbSamples>=ADC_NB_SAMPLE_MAX)
+	if(adcNbSamples==ADC_NB_SAMPLE_MAX)
 	{
 		//division par 256 
 		adcMoteurGAvg=adcMoteurGAvg>>8;
-		adcMoteurDAvg=adcMoteurDAvg>>8;
 
+		adcMoteurDAvg=adcMoteurDAvg>>8;
+			
 		//appel de la fonction dasservissement moteur
 		moteurAsservissement((S16)adcMoteurGAvg,(S16)adcMoteurDAvg);
-
 		//reset des valeurs cumulés
 		adcMoteurGAvg=0;
 		adcMoteurDAvg=0;
-
 		//Reset samples counter
+		adcNbSamples=0;
+	}
+	if(adcNbSamples>ADC_NB_SAMPLE_MAX)
+	{
+		adcMoteurGAvg=0;
+		adcMoteurDAvg=0;
 		adcNbSamples=0;
 	}
 }

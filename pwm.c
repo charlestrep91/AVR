@@ -26,17 +26,15 @@ void pwmInit(void)
   TIMSK=(0<<TICIE1)|(0<<OCIE1A)|(0<<OCIE1B)|(1<<TOIE1);
 
   //ajustement de la periode de 5mS
-//  ICR1H=0x27;
-//  ICR1L=0x10;
-	ICR1=0x2710;
+  ICR1=0x2710;
   OCR1A=0;
   OCR1B=0;
 }
 
 void pwmSetDutyValue(U16 valueD,U16 valueG,U8 portValue)
 {
-	pwmOCR1A_value=valueD;
-	pwmOCR1B_value=valueG;
+	pwmOCR1B_value=valueD;
+	pwmOCR1A_value=valueG;
 	pwmPortDREG.byte=portValue;
 }
 
@@ -48,4 +46,5 @@ ISR(TIMER1_OVF_vect)
 	pwmPortDREG.bit.b4=1;
 	pwmPortDREG.bit.b5=1;
 	PORTD=pwmPortDREG.byte;
+	CalculMoteur();
 }

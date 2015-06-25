@@ -74,9 +74,11 @@ ISR(ADC_vect)
 
 		//addition ou soustraction de la valeur lue selon le bit de signe
 		if(ADC_DIR_GAUCHE_PIN==ADC_NEG_VALUE)
-			adcMoteurDAvg-=(((ADCH&0x03)<<8)|ADCL);
+			adcMoteurGAvg-=(((ADCH&0x03)<<8)|ADCL);
 		else
-			adcMoteurDAvg+=(((ADCH&0x03)<<8)|ADCL);
+			adcMoteurGAvg+=(((ADCH&0x03)<<8)|ADCL);
+
+		
 
 	
 
@@ -91,9 +93,10 @@ ISR(ADC_vect)
 
 		//addition ou soustraction de la valeur lue selon le bit de signe
 		if(ADC_DIR_DROIT_PIN==ADC_NEG_VALUE)
-			adcMoteurGAvg-=(((ADCH&0x03)<<8)|ADCL);
+			adcMoteurDAvg-=(((ADCH&0x03)<<8)|ADCL);
 		else
-			adcMoteurGAvg+=(((ADCH&0x03)<<8)|ADCL);
+			adcMoteurDAvg+=(((ADCH&0x03)<<8)|ADCL);
+		
 	}
 
 	//incrémente le compteur d'échantillon
@@ -110,6 +113,13 @@ ISR(ADC_vect)
 			
 		//appel de la fonction dasservissement moteur
 		moteurAsservissement((S16)adcMoteurGAvg,(S16)adcMoteurDAvg);
+/*
+		dbgSendRobotString("adcMoteurGAvg:");
+		dbgSendDbgU16ToDec((U16)adcMoteurGAvg);
+
+		dbgSendRobotString("adcMoteurDAvg:");
+		dbgSendDbgU16ToDec((U16)adcMoteurDAvg);
+*/
 		//reset des valeurs cumulés
 		adcMoteurGAvg=0;
 		adcMoteurDAvg=0;

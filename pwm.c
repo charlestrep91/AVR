@@ -33,18 +33,25 @@ void pwmInit(void)
 
 void pwmSetDutyValue(U16 valueD,U16 valueG,U8 portValue)
 {
-	pwmOCR1B_value=valueD;
-	pwmOCR1A_value=valueG;
+	pwmOCR1B_value=valueG;
+	pwmOCR1A_value=valueD;
 	pwmPortDREG.byte=portValue;
+/*
+	dbgSendRobotString("pwmG:");
+	dbgSendDbgU16ToDec(pwmOCR1B_value);
+
+	dbgSendRobotString("pwmD:");
+	dbgSendDbgU16ToDec(pwmOCR1A_value);
+	*/
 }
 
 
 ISR(TIMER1_OVF_vect)
 {
+	CalculMoteur();
 	OCR1A=pwmOCR1A_value;
 	OCR1B=pwmOCR1B_value;
 	pwmPortDREG.bit.b4=1;
 	pwmPortDREG.bit.b5=1;
 	PORTD=pwmPortDREG.byte;
-	CalculMoteur();
 }

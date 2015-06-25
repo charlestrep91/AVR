@@ -9,7 +9,7 @@
 /******************************************************************************
  * Insérer dans le buffer out
  *****************************************************************************/
-void putDataOutBuf(u08 data){
+void putDataOutBuf(U8 data){
 
 	CircularBufferOutEnd++;
 	CircularBufferOutEnd %= CIRCULAR_BUFFER_SIZE;
@@ -21,11 +21,11 @@ void putDataOutBuf(u08 data){
 /******************************************************************************
  * Retirer du buffer out
  *****************************************************************************/
-u08 getDataOutBuf(void){
+U8 getDataOutBuf(void){
 
 	CircularBufferOutIndex++;
 	CircularBufferOutIndex %= CIRCULAR_BUFFER_SIZE;
-	return (u08)CircularBufferOut[CircularBufferOutIndex];
+	return (U8)CircularBufferOut[CircularBufferOutIndex];
 
 }
 
@@ -33,7 +33,7 @@ u08 getDataOutBuf(void){
 /******************************************************************************
  * Insérer dans le buffer in
  *****************************************************************************/
-void putDataInBuf(u08 * ptr){
+void putDataInBuf(U8 * ptr){
 
 	CircularBufferInEnd++;
 	CircularBufferInEnd %= CIRCULAR_BUFFER_SIZE;
@@ -45,7 +45,7 @@ void putDataInBuf(u08 * ptr){
 /******************************************************************************
  * Retirer du buffer in
  *****************************************************************************/
-u08 * getDataInBuf(void){
+U8 * getDataInBuf(void){
 
 	CircularBufferInIndex++;
 	CircularBufferInIndex %= CIRCULAR_BUFFER_SIZE;
@@ -57,7 +57,7 @@ u08 * getDataInBuf(void){
 /******************************************************************************
  * Écrire sur le bus twi
  *****************************************************************************/
-void twiWrite(u08 address, u08 registre, u08 data){
+void twiWrite(U8 address, U8 registre, U8 data){
 		
 	cli();
 	/*
@@ -70,7 +70,7 @@ void twiWrite(u08 address, u08 registre, u08 data){
 /******************************************************************************
  * lire sur le bus
  *****************************************************************************/
-void twiRead(u08 address, u08 registre, u08 *ptr){
+void twiRead(U8 address, U8 registre, U8 *ptr){
 
 	cli();
 	/*
@@ -86,10 +86,17 @@ void twiRead(u08 address, u08 registre, u08 *ptr){
  *****************************************************************************/
 ISR(TWI_vect) {
 	
-	u08 status  = TWSR & 0xF8;
+	U8 status  = TWSR & 0xF8;
 		
 	switch (status) {
 		case	0x08: /* Start Condition */
+	//		TWCR |= (1<<TWSTA) | (1<<TWINT); 	//send a start condition and clear interrupt flag
+	//		while (!(TWCR & (1<<TWINT)))		//wait until start condition has been sent
+			TWDR = SLAVE_W_ADDR;				//load slave address
+			TWCR = (1<<TWINT) | (1<<TWEN);		//start transmission of address
+			break;
+
+
 		case	0x10: /* Restart Condition */
 			
 			/* 
@@ -97,10 +104,15 @@ ISR(TWI_vect) {
 				qui est dans le buffer Out et Activer le bus sans start/stop 
 			*/
 			
-			break;
+		break;
 
 		case	0x18: /* Address Write Ack */
+			TWDR = getDataOutBuf();
+			TWCR = (1<<TWINT) | (1<<TWEN);
+			break;
+
 		case	0x28: /* Data Write Ack */
+
 		case	0x30: /* Date Write NoAck */
 			
 			/* 
@@ -151,11 +163,12 @@ ISR(TWI_vect) {
  *****************************************************************************/
 void twiInit(void)
 {
-/*
-	TWBR = (1<<URSEL)|(0<<UMSEL)|(0<<UPM1)|(0<<UPM0)|(0<<USBS)|(1<<UCSZ1)|(1<<UCSZ0)|(0<<UCPOL); 
-	TWCR = 
-	TWSR = 
-	*/
+
+	TWBR = 0x20; 
+	TWCR |= ((1<<TWEN) | (1<<TWIE));
+	TWSR |= (1<<TWD0);
+	TWSR &= (0<<TWD1);
+	
 }	
 
 

@@ -2,32 +2,34 @@
  *
  *
  *****************************************************************************/
+#include "hardware.h"
 
 #ifndef I2C_H
 #define I2C_H
 
 
-#define CIRCULAR_BUFFER_SIZE 
+#define CIRCULAR_BUFFER_SIZE 64
+#define SLAVE_W_ADDR 45
 
 /** Prototype */
 
-void putDataOutBuf(u08 data);
-u08 getDataOutBuf(void);
-void putDataInBuf(u08 * ptr);
-u08 * getDataInBuf(void);
+void putDataOutBuf(U8 data);
+U8 getDataOutBuf(void);
+void putDataInBuf(U8 * ptr);
+U8 * getDataInBuf(void);
 
-void twiWrite(u08 address, u08 registre, u08 data);
-void twiRead(u08 address, u08 registre, u08 *ptr);
+void twiWrite(U8 address, U8 registre, U8 data);
+void twiRead(U8 address, U8 registre, U8 *ptr);
 void twiInit(void);
 
 /** Les variables */
-u08 CircularBufferOut[CIRCULAR_BUFFER_SIZE];
-u08 * CircularBufferIn[CIRCULAR_BUFFER_SIZE];
+U8 CircularBufferOut[CIRCULAR_BUFFER_SIZE];
+U8 * CircularBufferIn[CIRCULAR_BUFFER_SIZE];
 
-u08 CircularBufferOutEnd;
-u08 CircularBufferOutIndex;
-u08 CircularBufferInEnd;
-u08 CircularBufferInIndex;
+U8 CircularBufferOutEnd;
+U8 CircularBufferOutIndex;
+U8 CircularBufferInEnd;
+U8 CircularBufferInIndex;
 
 
 #endif

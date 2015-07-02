@@ -28,7 +28,7 @@ void dbgSendDbgString(U8 *buf);
 void dbgSendRobotString(U8 *buf);
 
 
-void dbgSendDbgU16ToDec(U16 value);
+void dbgSendDbgU16ToDec(U8 *buf,U16 value);
 
 
 #endif		

@@ -12,6 +12,7 @@
 #include "pwm.h"
 #include "uart.h"
 #include "adc.h"
+#include "moteur.h"
 
 
 
@@ -23,17 +24,20 @@ int main( void )
 	uartInit();
 	pwmInit();	
 	adcInit();
-	dbgSendRobotString("Reset");
 	portBREG.byte=0xff;
 	portBREG.bit.b0=0;
 	PORTB=portBREG.byte;
+	adcStartConversion();	
 	sei();					//enable interrupts
-	adcStartConversion();
+	
+	
 	
 
 	while(1)
 	{
 		cPMainCmdParser();
+		uartSendData();
+		CalculMoteur();		
 	}
 
 

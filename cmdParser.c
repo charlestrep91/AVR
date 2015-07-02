@@ -40,13 +40,14 @@ void cPMainCmdParser(void)
 	if(uartGetRxSize())
 	{
 		data=uartGetByte();
+		uartSendByteCMD(data);
  	  	switch(cPState)
  		{
 	 		case CP_SYNC_STATE:
 
 				if(data==CP_CMD_NORMALE||data==CP_CMD_ARRET)
 				{			
-					uartSendByte(data);
+					//uartSendByteCMD(data);
 					cPCmdValue=data;
 					cPState=CP_GET_VITESSE_STATE;
 				}
@@ -54,14 +55,8 @@ void cPMainCmdParser(void)
 			break;
 
 			case CP_GET_VITESSE_STATE:
-			
-				if( (cPVitesseValue!=data) && (data==0) )
-				{
-//					dbgSendDbgString("vitesse=0");
-				}
-
 				cPVitesseValue=data;
-				uartSendByte(data);
+				//uartSendByteCMD(data);
 				cPState=CP_GET_ANGLE_STATE;			
 
 			break;
@@ -70,7 +65,7 @@ void cPMainCmdParser(void)
 			case CP_GET_ANGLE_STATE:
 
 				cPAngleValue=data;
-				uartSendByte(data);
+				
 
 				if(cPCmdValue==CP_CMD_NORMALE)
 					cPState=CP_RUN_STATE;
@@ -82,15 +77,12 @@ void cPMainCmdParser(void)
 
 				cPState=CP_SYNC_STATE;
 				(void)moteurControl(cPVitesseValue,cPAngleValue,M_ARRET);
-			//	dbgSendDbgString("arret");
 
 			break;
 
 			case CP_RUN_STATE:
 
 				cPState=CP_SYNC_STATE;
-			//	dbgSendDbgString("run");
-			  //	PORTB=~cPAngleValue;
 				(void)moteurControl(cPVitesseValue,cPAngleValue,M_MARCHE);
 
 			break;

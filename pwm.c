@@ -12,10 +12,11 @@
 #include "dbgCmd.h"
 #include "moteur.h"
 
-volatile U16 pwmOCR1A_value=0;
-volatile U16 pwmOCR1B_value=0;
-tREG08 pwmPortDREG;
+ volatile U16 pwmOCR1A_value=0;
+ volatile   U16 pwmOCR1B_value=0;
+ volatile   tREG08 pwmPortDREG;
 U16 period=10000;
+U8 counter=0;
 
 void pwmInit(void)
 {
@@ -27,8 +28,8 @@ void pwmInit(void)
 
   //ajustement de la periode de 5mS
   ICR1=0x2710;
-  OCR1A=0;
-  OCR1B=0;
+  OCR1A=3000;
+  OCR1B=3000;
 }
 
 void pwmSetDutyValue(U16 valueD,U16 valueG,U8 portValue)
@@ -36,22 +37,16 @@ void pwmSetDutyValue(U16 valueD,U16 valueG,U8 portValue)
 	pwmOCR1B_value=valueG;
 	pwmOCR1A_value=valueD;
 	pwmPortDREG.byte=portValue;
-/*
-	dbgSendRobotString("pwmG:");
-	dbgSendDbgU16ToDec(pwmOCR1B_value);
-
-	dbgSendRobotString("pwmD:");
-	dbgSendDbgU16ToDec(pwmOCR1A_value);
-	*/
 }
 
 
 ISR(TIMER1_OVF_vect)
 {
-	CalculMoteur();
-	OCR1A=pwmOCR1A_value;
+    
+    OCR1A=pwmOCR1A_value;
 	OCR1B=pwmOCR1B_value;
 	pwmPortDREG.bit.b4=1;
 	pwmPortDREG.bit.b5=1;
-	PORTD=pwmPortDREG.byte;
+	PORTD=pwmPortDREG.byte;	
+	moteurUpdateDutys();
 }

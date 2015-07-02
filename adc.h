@@ -27,6 +27,7 @@ void adcInit(void);
 */
 void adcStartConversion(void);
 
+void adcCalculateAvg(void);
 
 
 

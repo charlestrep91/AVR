@@ -14,21 +14,24 @@
 #include "dbgCmd.h"
 
 
-#define ADC_MOTEUR_GAUCHE 	0
-#define ADC_MOTEUR_DROIT  	1
+#define ADC_MOTEUR_GAUCHE 	0x00
+#define ADC_MOTEUR_DROIT  	0x01
 #define ADC_MUX_SETTTING  	(0<<REFS1)|(0<<REFS0)|(0<<ADLAR)
 #define ADC_NEG_VALUE 	  	1		
 #define ADC_POS_VALUE     	0 
-#define ADC_NB_SAMPLE_MAX 	512
+#define ADC_NB_SAMPLE_MAX 	32
 
 volatile U8  adcMuxState	=0;
-volatile S32 adcMoteurGAvg	=0;
-volatile S32 adcMoteurDAvg	=0;
+volatile S16 adcMoteurGAvg	=0;
+volatile S16 adcMoteurDAvg	=0;
 volatile U16 adcNbSamples	=0;
 volatile tREG08 adcPortAREG;	
+volatile U16 Mcounter		=0;
+volatile S16 adcValue		=0;
+volatile U8 adcUpdateSetting=0;
 
-#define ADC_DIR_GAUCHE_PIN  adcPortAREG.bit.b0
-#define ADC_DIR_DROIT_PIN   adcPortAREG.bit.b1
+#define ADC_DIR_GAUCHE_PIN  	adcPortAREG.bit.b2
+#define ADC_DIR_DROIT_PIN   	adcPortAREG.bit.b3
 	
 
 /*
@@ -37,12 +40,20 @@ volatile tREG08 adcPortAREG;
 */
 void adcInit(void)
 {
-    SFIOR=0x0F&SFIOR;
-	ADMUX=ADC_MUX_SETTTING|(ADC_MOTEUR_GAUCHE);	
- 	ADCSRA=(1<<ADEN)|(0<<ADSC)|(1<<ADATE)|(0<<ADIF)|(1<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);	
+    
+	ADMUX=ADC_MOTEUR_DROIT;	
+ 	ADCSRA=(1<<ADEN )
+		  |(0<<ADSC )	
+		  |(1<<ADATE)	
+		  |(0<<ADIF )
+		  |(1<<ADIE )
+		  |(1<<ADPS2)
+		  |(1<<ADPS1)
+		  |(1<<ADPS0);	
 
 	//init letat de la variable de lecture
-   	adcMuxState=ADC_MOTEUR_GAUCHE;	
+   	adcMuxState=ADC_MOTEUR_DROIT;	
+	SFIOR=0x0F&SFIOR;
 }
 
 /*
@@ -61,78 +72,65 @@ void adcStartConversion(void)
 */
 ISR(ADC_vect)
 {
-    //affectation des valeurs du portA à la variable de port
+	ADMUX = (ADMUX & 0x01) ? (0<<MUX0) : (1<<MUX0);
+	adcValue=(S16)(((ADCH&0x03)<<8)|ADCL);
 	adcPortAREG.byte=PINA;
-
-	//lecture du moteur Droit
-	//routine d'accumulation des valeurs
-	if(adcMuxState==ADC_MOTEUR_DROIT)
-	{
-		//assignation de la valeur de mux pour la prochaine conversion
-		ADMUX=ADC_MUX_SETTTING|ADC_MOTEUR_GAUCHE;
-		adcMuxState=ADC_MOTEUR_GAUCHE;
-
-		//addition ou soustraction de la valeur lue selon le bit de signe
-		if(ADC_DIR_GAUCHE_PIN==ADC_NEG_VALUE)
-			adcMoteurGAvg-=(((ADCH&0x03)<<8)|ADCL);
+	adcUpdateSetting=1;	
+	if(adcMuxState==ADC_MOTEUR_GAUCHE)
+			adcMuxState=ADC_MOTEUR_DROIT;
 		else
-			adcMoteurGAvg+=(((ADCH&0x03)<<8)|ADCL);
+			adcMuxState=ADC_MOTEUR_GAUCHE;
+}
 
-		
-
-	
-
-	}
-	//lecture du moteur Gauche
-	//routine d'accumulation des valeurs
-	else
+void adcCalculateAvg(void)
+{
+	if(adcUpdateSetting==1)
 	{
-		//assignation de la valeur de mux pour la prochaine conversion
-		ADMUX=ADC_MUX_SETTTING|ADC_MOTEUR_DROIT;
-		adcMuxState=ADC_MOTEUR_DROIT;		
-
-		//addition ou soustraction de la valeur lue selon le bit de signe
-		if(ADC_DIR_DROIT_PIN==ADC_NEG_VALUE)
-			adcMoteurDAvg-=(((ADCH&0x03)<<8)|ADCL);
-		else
-			adcMoteurDAvg+=(((ADCH&0x03)<<8)|ADCL);
+		
+		adcUpdateSetting=0;
+		//lecture du moteur Droit
+		//routine d'accumulation des valeurs
+		if(adcMuxState==ADC_MOTEUR_GAUCHE)
+		{	
+			//assignation de la valeur de mux pour la prochaine conversion
+			adcNbSamples++;
+			//addition ou soustraction de la valeur lue selon le bit de signe
+			if(ADC_DIR_GAUCHE_PIN==ADC_NEG_VALUE)
+				adcMoteurGAvg-=adcValue;
+			else
+				adcMoteurGAvg+=adcValue;
+		}
+		else if(adcMuxState==ADC_MOTEUR_DROIT)
+		{
+			//assignation de la valeur de mux pour la prochaine conversion
+			adcNbSamples++;
+			//addition ou soustraction de la valeur lue selon le bit de signe
+			if(ADC_DIR_DROIT_PIN==ADC_NEG_VALUE)
+				adcMoteurDAvg-=adcValue;
+			else
+				adcMoteurDAvg+=adcValue;
+		
+		}
+		
 		
 	}
-
-	//incrémente le compteur d'échantillon
-	adcNbSamples++;
-
-	//512 valeurs echantillonnées totales, mais 256 valeurs pour chacun des moteurs
+	//incrémente le compteur d'échantillon	
+	//16 valeurs echantillonnées totales, mais 8 valeurs pour chacun des moteurs
 	//routine de calcul de la moyenne et envoie a la fct d'asservisement moteur
-	if(adcNbSamples==ADC_NB_SAMPLE_MAX)
+	if(adcNbSamples>=ADC_NB_SAMPLE_MAX)
 	{
-		//division par 256 
-		adcMoteurGAvg=adcMoteurGAvg>>8;
-
-		adcMoteurDAvg=adcMoteurDAvg>>8;
-			
+		//division par 8 
+		adcMoteurGAvg=adcMoteurGAvg>>4;
+		adcMoteurDAvg=adcMoteurDAvg>>4;		
 		//appel de la fonction dasservissement moteur
-		moteurAsservissement((S16)adcMoteurGAvg,(S16)adcMoteurDAvg);
-/*
-		dbgSendRobotString("adcMoteurGAvg:");
-		dbgSendDbgU16ToDec((U16)adcMoteurGAvg);
-
-		dbgSendRobotString("adcMoteurDAvg:");
-		dbgSendDbgU16ToDec((U16)adcMoteurDAvg);
-*/
+		moteurAsservissement(adcMoteurGAvg,adcMoteurDAvg);
 		//reset des valeurs cumulés
 		adcMoteurGAvg=0;
 		adcMoteurDAvg=0;
 		//Reset samples counter
 		adcNbSamples=0;
 	}
-	if(adcNbSamples>ADC_NB_SAMPLE_MAX)
-	{
-		adcMoteurGAvg=0;
-		adcMoteurDAvg=0;
-		adcNbSamples=0;
-	}
-}
 
+}
 
 

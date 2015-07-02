@@ -11,6 +11,8 @@ U8 mMode=0;
 
 U16 dutyValD;
 U16 dutyValG;
+static U8  TobeUpdated=1;
+static U8  counterCMD=0;
 
 float mVitesse_D=0;		//vitesse formattee en float pour envoyer a la fonction CalculPWM
 float mAngle_D=0;		//angle formatte en float pour envoyer a la fonction CalculPWM
@@ -18,13 +20,8 @@ float mVg=0;			//valeur ADC formatte en float pour envoyer a la fonction CalculP
 float mVd=0;			//valeur ADC formatte en float pour envoyer a la fonction CalculPWM
 float mDuty_G=0;		//duty cycle retourne par la fonction CalculPWM
 float mDuty_D=0;		//duty cycle retourne par la fonction CalculPWM
-tREG08 mPortDREG;		//
-#define M_DIR_G1 mPortDREG.bit.b2
-#define M_DIR_G2 mPortDREG.bit.b3
-#define M_DIR_D1 mPortDREG.bit.b6
-#define M_DIR_D2 mPortDREG.bit.b7
 
-void CalculMoteur(void);
+
 
 
 void CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd, float *Duty_G, float *Duty_D)
@@ -79,8 +76,7 @@ U8 moteurControl(U8 vitesse,U8 angle,U8 mode)
 {	
 	if(vitesse>VITESSEMAX || angle>ANGLEMAX)	//verifies if received value is not within accepted range
 	{
-		dbgSendDbgString("ERROR: Value out of range");
-		return 1;		
+		return 1;
 	}
 	mMode=mode;	
 	if(vitesse!=lastVitesse || angle!=lastAngle)
@@ -105,35 +101,32 @@ U8 moteurControl(U8 vitesse,U8 angle,U8 mode)
 
 void moteurAsservissement(S16 vitG,S16 vitD)
 {
-
-	if((vitG!=lastVitG || vitD!=lastVitD))
-	{
-		if(vitG!=lastVitG)
-		{
-			mVg=(float)vitG/1023;
-			
-		}
-
-		if(vitD!=lastVitD)
-		{
-			mVd=(float)vitD/1023;
-		}
+		mVg=(float)vitG/1023;
+		mVd=(float)vitD/1023;
 		lastVitG=vitG;
 		lastVitD=vitD;
-	}
+}
 
-
-
-
-
+void moteurUpdateDutys(void)
+{
+	TobeUpdated=1;
 }
 
 void CalculMoteur(void)
 {
-	   
+tREG08 mPortDREG;		
+#define M_DIR_G1 mPortDREG.bit.b2
+#define M_DIR_G2 mPortDREG.bit.b3
+#define M_DIR_D1 mPortDREG.bit.b6
+#define M_DIR_D2 mPortDREG.bit.b7	  
+ 
+
+	if(TobeUpdated==1)
+	{
 		//MODE AVANT
 		if(mMode!=M_MARCHE)
 		{
+		
 			switch(mMode)
 			{
 				case M_NEUTRE:
@@ -160,7 +153,7 @@ void CalculMoteur(void)
 		}
 		else
 		{
-			CalculPWM(mVitesse_D,mAngle_D,mVg,mVd,&mDuty_G,&mDuty_D);
+			CalculPWM(mVitesse_D,mAngle_D,mVg,mVd,&mDuty_G,&mDuty_D);	
 			//MODE ARRIERE
 			if(mDuty_G<0)
 			{
@@ -188,9 +181,24 @@ void CalculMoteur(void)
 				M_DIR_D1=1;
 				M_DIR_D2=0;	
 			}
-			dutyValD=(U16)((float)mDuty_D*10000);
-			dutyValG=(U16)((float)mDuty_G*10000);
-		}	
+		
+			dutyValD=(U16)(mDuty_D*10000);
+			dutyValG=(U16)(mDuty_G*10000);		
+		}
 		pwmSetDutyValue(dutyValD,dutyValG,mPortDREG.byte);
+		TobeUpdated=0;
+	//	counterCMD++;
+		if(counterCMD>200)
+		{
+			dbgSendDbgU16ToDec((U8*)"droit=",dutyValD);
+			dbgSendDbgU16ToDec((U8*)"gauche=",dutyValG);
+			dbgSendDbgU16ToDec((U8*)"adcD=",(U16)lastVitD);
+			dbgSendDbgU16ToDec((U8*)"adcG=",(U16)lastVitG);
+			counterCMD=0;
+		}
+	}
 
 }
+
+
+

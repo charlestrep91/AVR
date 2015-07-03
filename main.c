@@ -28,8 +28,12 @@ int main( void )
 	uartInit();
 	pwmInit();	
 	adcInit();
+<<<<<<< HEAD
 //	WdInit();
 //	WdDisable();
+=======
+	
+>>>>>>> origin/master
 	
 	adcStartConversion();
 	//enable interrupt
@@ -41,6 +45,11 @@ int main( void )
 	SLWaitForTheStartSw();
 
 //	WD_RESTART_WATCHDOG;
+<<<<<<< HEAD
+=======
+//	WdInit();
+
+>>>>>>> origin/master
 	
 	
 	

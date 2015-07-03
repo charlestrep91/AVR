@@ -50,6 +50,10 @@
 #define COEFF_CONVERT	38.889f
 #define OFFSET_CONVERT	34		//to have 15m of range
 #define SECURITY_LENGHT	60
+#define RECULE 2
+#define NEUTRE 0
+#define AVANCE 1
+#define FREIN  3
 
 // Struct data sensor
 typedef struct{
@@ -69,14 +73,14 @@ void putDataOutBuf(U8 data);
 U8 getDataOutBuf(void);
 
 // Function's prototypes : TWI gestion
-void Init_TWI();
+void Init_TWI(void);
 void twiWrite(U8 address, U8 registre, U8 data);
 void twiRead(U8 address, U8 registre);
 void Ping_sensor(void);
-void Gestion_colision(float *l_Duty_cycleG, float *l_Duty_cycleD);
+void Gestion_colision(float *l_Duty_cycleG, float *l_Duty_cycleD, U8 * port);
 void range_sensor(float MoyenneLeft, float MoyenneRight);
 
-void TestSensor();
+void TestSensor(void);
 void putDataInBuf(U8 data);
 U8 getDataInBuf(void);
 void twiRead(U8 address, U8 registre);

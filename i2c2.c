@@ -16,6 +16,8 @@
 
 //ping will change all 50ms
 U8 ping=SENSOR_R;
+float ratioL;
+float ratioR;
 
 //Circular buffer
 U8 CircularBufferOut[CIRCULAR_BUFFER_SIZE];
@@ -60,7 +62,8 @@ void putDataOutBuf(U8 data){
 // Output : Adresse, register or data to be used by TWI
 //
 ///////////////////////////////////////////////////////////////////////////////
-U8 getDataOutBuf(void){
+U8 getDataOutBuf(void)
+{
 	
 	U8 Buff;
 	
@@ -112,7 +115,8 @@ U8 nextDataOutBuf(void){
 //			0 : TWI = free
 //
 ///////////////////////////////////////////////////////////////////////////////
-U8 TWI_busy(void){
+U8 TWI_busy(void)
+{
 
   return ( TWCR & (1<<TWIE) );                  // IF TWI Interrupt is enabled then the Transceiver is busy
 
@@ -131,7 +135,8 @@ U8 TWI_busy(void){
 // Output : N/A
 //
 ///////////////////////////////////////////////////////////////////////////////
-void Init_TWI(){
+void Init_TWI(void)
+{
 		
 	// Prescale of 1, to have 10Khz on SCL
 	TWSR |= (0<<TWPS1)|(1<<TWPS0);	//TWPS value of the prescale
@@ -144,7 +149,8 @@ void Init_TWI(){
 	twiWrite(LEFT_SONAR_W,  REG_W_DISTANCE, DISTANCE);		//registre distance sensor left
 	twiWrite(RIGHT_SONAR_W, REG_W_DISTANCE, DISTANCE);		//registre distance sensor right
 	
-	if(TWI_busy() == 0){
+	if(TWI_busy() == 0)
+	{
 		START_I2C;
 	}
 
@@ -170,14 +176,13 @@ void Init_TWI(){
 // Output : N/A
 //
 ///////////////////////////////////////////////////////////////////////////////
-void twiWrite(U8 address, U8 registre, U8 data){
+void twiWrite(U8 address, U8 registre, U8 data)
+{
 		
 	cli();
-
 	putDataOutBuf(address);			// First Byte send in trame TWI, ask to which slave in TWI network
 	putDataOutBuf(registre);		// Second Byte send in trame TWI, which register in this slave
 	putDataOutBuf(data);			// Data who will be put int this register.
-
 	sei();
 	
 }
@@ -202,16 +207,13 @@ void twiWrite(U8 address, U8 registre, U8 data){
 // Output : N/A
 //
 ///////////////////////////////////////////////////////////////////////////////
-void twiRead(U8 address, U8 registre){
+void twiRead(U8 address, U8 registre)
+{
 
-	cli();
-	
-
-	
+	cli();		
 	putDataOutBuf(address & 0xFE);	//begin with adresse of slave in write mode (& 0xFE)		
 	putDataOutBuf(registre);		//register who will be read
 	putDataOutBuf(address);			//send adresse to slave in read mode
-
 	sei();
 }
 
@@ -248,11 +250,12 @@ void Ping_sensor(void){
 		ping = SENSOR_L;
 
 	}
-	else {
+	else 
+	{
 
 		//put new parameters on left sensor
-		twiWrite(LEFT_SONAR_W,  REG_W_GAIN, GAIN);				//registre gain sensor left
-		twiWrite(LEFT_SONAR_W,  REG_W_DISTANCE, sensorL.distance);		//registre distance sensor left
+		twiWrite(LEFT_SONAR_W,  REG_W_GAIN, GAIN);//registre gain sensor left
+		twiWrite(LEFT_SONAR_W,  REG_W_DISTANCE, sensorL.distance);//registre distance sensor left
 		
 		// Ping sensor left
 		twiWrite(LEFT_SONAR_W, REG_W_CMD, CMD_CM);	
@@ -293,10 +296,14 @@ void Ping_sensor(void){
 // Output : N/A
 //
 ///////////////////////////////////////////////////////////////////////////////
-void Gestion_colision(float *l_Duty_cycleG, float *l_Duty_cycleD){
-/*
-	float ratioL;
-	float ratioR;
+void Gestion_colision(float *l_Duty_cycleG, float *l_Duty_cycleD, U8 * port){
+
+	tREG08 mPortDREG;		
+	#define M_DIR_G1 mPortDREG.bit.b2
+	#define M_DIR_G2 mPortDREG.bit.b3
+	#define M_DIR_D1 mPortDREG.bit.b6
+	#define M_DIR_D2 mPortDREG.bit.b7
+	
 
 	//more than sensor left down, more ratioR down. Vice versa
 	ratioL = (sensorL.Value<sensorR.Value) ? ((sensorL.Value/4.3f-1)/100) : ((sensorL.Value>sensorR.Value) ? (0.8f) : (1.0f));
@@ -305,28 +312,34 @@ void Gestion_colision(float *l_Duty_cycleG, float *l_Duty_cycleD){
 	//security, turn on himself if object too close
 	if((sensorL.Value<SECURITY_LENGHT || sensorR.Value<SECURITY_LENGHT) && (sensorL.Value<=sensorR.Value)){
 
-		SetLeftMotion(AVANCE);
-		SetRightMotion(RECULE);
+		M_DIR_G1=1;
+		M_DIR_G2=0;	
+		M_DIR_D1=0;
+		M_DIR_D2=1;
 
 		ratioL = 0.1;
 		ratioR = 0.1;
 	}
-	else if((sensorL.Value<SECURITY_LENGHT || sensorR.Value<SECURITY_LENGHT) && (sensorL.Value>sensorR.Value)){
-		SetLeftMotion(RECULE);
-		SetRightMotion(AVANCE);
+	else if((sensorL.Value<SECURITY_LENGHT || sensorR.Value<SECURITY_LENGHT) && (sensorL.Value>sensorR.Value))
+	{
+		M_DIR_G1=0;
+		M_DIR_G2=1;
+		M_DIR_D1=1;
+		M_DIR_D2=0;	
 
 		ratioL = 0.1;
 		ratioR = 0.1;
 	}
 
 	//LED4 turn on when object on sensor left, LED2 for sensor right
-	(sensorL.Value > 300) ? SET(PORTB, PORTB4) : CLR(PORTB, PORTB4);
-	(sensorR.Value > 300) ? SET(PORTB, PORTB2) : CLR(PORTB, PORTB2);
+//	(sensorL.Value > 300) ? SET(PORTB, PORTB4) : CLR(PORTB, PORTB4);
+//	(sensorR.Value > 300) ? SET(PORTB, PORTB2) : CLR(PORTB, PORTB2);
 
 	//multiplicate ratio and duty cycle
 	*l_Duty_cycleG *= ratioR;
 	*l_Duty_cycleD *= ratioL;
-	*/
+	*port=mPortDREG.byte;
+	
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -343,10 +356,10 @@ void Gestion_colision(float *l_Duty_cycleG, float *l_Duty_cycleD){
 // Output : N/A
 //
 ///////////////////////////////////////////////////////////////////////////////
-void range_sensor(float MoyenneLeft, float MoyenneRight){
-
-	sensorR.distance = (MoyenneRight > 0.0f) ? ((U8)(MoyenneRight * COEFF_CONVERT + OFFSET_CONVERT)) : (OFFSET_CONVERT);
-	sensorL.distance = (MoyenneLeft > 0.0f) ? ((U8)(MoyenneLeft * COEFF_CONVERT + OFFSET_CONVERT)) : (OFFSET_CONVERT);
+void range_sensor(float MoyenneLeft, float MoyenneRight)
+{
+	sensorR.distance = (MoyenneRight > 0.0f) ? ((U8)(MoyenneRight * COEFF_CONVERT + OFFSET_CONVERT)) : (1);
+	sensorL.distance = (MoyenneLeft  > 0.0f) ? ((U8)(MoyenneLeft  * COEFF_CONVERT + OFFSET_CONVERT)) : (1);
 
 }
 

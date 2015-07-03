@@ -11,6 +11,7 @@
 #include "pwm.h"
 #include "dbgCmd.h"
 #include "adc.h"
+#include "i2c2.h"
 U8 lastVitesse=0;	
 U8 lastAngle=0;
 S16 lastVitG=0;
@@ -27,8 +28,8 @@ float mVg=0;			//valeur ADC formatte en float pour envoyer a la fonction CalculP
 float mVd=0;			//valeur ADC formatte en float pour envoyer a la fonction CalculPWM
 float mDuty_G=0;		//duty cycle retourne par la fonction CalculPWM
 float mDuty_D=0;		//duty cycle retourne par la fonction CalculPWM
-
-
+float mDutyMultD;
+float mDutyMultG;
 
 
 void CalculPWM(float Vitesse_D, float Angle_D, float Vg, float Vd, float *Duty_G, float *Duty_D)
@@ -152,8 +153,13 @@ tREG08 mPortDREG;
 		}
 		else
 		{
-			adcCalculateAvg(&mVd,&mVg);
-			CalculPWM(mVitesse_D,mAngle_D,mVg,mVd,&mDuty_G,&mDuty_D);	
+
+			adcCalculateAvg(&mVd,&mVg);	
+			CalculPWM(mVitesse_D,mAngle_D,mVg,mVd,&mDuty_G,&mDuty_D);
+			#ifdef __DETECTION_COLLISION
+			range_sensor(mVg,mVd);
+			Gestion_colision(&mDuty_G, &mDuty_D,&mPortDREG.byte);
+			#endif	
 			//MODE ARRIERE
 			if(mDuty_G<0)
 			{
@@ -180,7 +186,8 @@ tREG08 mPortDREG;
 			{
 				M_DIR_D1=1;
 				M_DIR_D2=0;	
-			}	
+			}
+			
 			dutyValD=(U16)(mDuty_D*10000);
 			dutyValG=(U16)(mDuty_G*10000);		
 		}

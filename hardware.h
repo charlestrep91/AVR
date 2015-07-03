@@ -20,6 +20,10 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+
+//#define __DETECTION_COLLISION 
+
+
 //Definition des type de var declarés dans le code
 #define U8  unsigned char 
 #define U16 unsigned int  
@@ -27,6 +31,8 @@
 #define S16 signed   int  
 #define U32 long
 #define S32 signed long
+
+#define __DETECTION_COLLISION 
 
 typedef union uREG08    /*8 bit register with byte and bit access*/
   {

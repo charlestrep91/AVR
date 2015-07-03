@@ -28,12 +28,16 @@ int main( void )
 	uartInit();
 	pwmInit();	
 	adcInit();
+<<<<<<< .merge_file_a15164
 <<<<<<< HEAD
 //	WdInit();
 //	WdDisable();
 =======
 	
 >>>>>>> origin/master
+=======
+	
+>>>>>>> .merge_file_a16876
 	
 	adcStartConversion();
 	//enable interrupt
@@ -45,11 +49,16 @@ int main( void )
 	SLWaitForTheStartSw();
 
 //	WD_RESTART_WATCHDOG;
+<<<<<<< .merge_file_a15164
 <<<<<<< HEAD
 =======
 //	WdInit();
 
 >>>>>>> origin/master
+=======
+//	WdInit();
+
+>>>>>>> .merge_file_a16876
 	
 	
 	

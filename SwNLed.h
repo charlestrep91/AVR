@@ -1,11 +1,14 @@
+///////////////////////////////////////////////////////////////////////////
 /*
- ELE542 
+	SwNLed.h
+ 	ELE542 - ÉTÉ2015
+ 	Jonathan Lapointe LAPJ05108303
+ 	Charles Trépanier TREC07029107
 
- Jonathan Lapointe LAPJ05108303
- Charles Trépanier 
-
-
+	Contains prototypes and definitions for SwNLed.h.
 */
+///////////////////////////////////////////////////////////////////////////
+
 #include "hardware.h"
 
 #ifndef SW_N_LED

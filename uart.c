@@ -1,9 +1,14 @@
+///////////////////////////////////////////////////////////////////////////
 /*
- ELE542 
- Jonathan Lapointe LAPJ05108303
- Charles Trépanier 
-*/
+	uart.c
+ 	ELE542 - ÉTÉ2015
+ 	Jonathan Lapointe LAPJ05108303
+ 	Charles Trépanier TREC07029107
 
+	Contains functions for communication with the remote control on the 
+	serial port.
+*/
+///////////////////////////////////////////////////////////////////////////
 
 #include "uart.h"
 #include "hardware.h"

@@ -1,16 +1,13 @@
+///////////////////////////////////////////////////////////////////////////
 /*
- ELE542 
+	hardware.h
+ 	ELE542 - ÉTÉ2015
+ 	Jonathan Lapointe LAPJ05108303
+ 	Charles Trépanier TREC07029107
 
- Jonathan Lapointe LAPJ05108303
- Charles Trépanier 
-
-
+	Contains general purpose prototypes and definitions.
 */
-
-
-
-
-
+///////////////////////////////////////////////////////////////////////////
 
 #ifndef HARDWARE_H
 #define HARDWARE_H
@@ -20,7 +17,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-//Definition des type de var declarés dans le code
+//Definition des type de var declarées dans le code
 #define U8  unsigned char 
 #define U16 unsigned int  
 #define S8  signed   char 

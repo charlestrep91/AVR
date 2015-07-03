@@ -1,8 +1,13 @@
+///////////////////////////////////////////////////////////////////////////
 /*
- ELE542 
- Jonathan Lapointe LAPJ05108303
- Charles Trépanier 
+	cmdParser.c
+ 	ELE542 - ÉTÉ2015
+ 	Jonathan Lapointe LAPJ05108303
+ 	Charles Trépanier TREC07029107
+
+	Contains functions for processing commands received from remote control.
 */
+///////////////////////////////////////////////////////////////////////////
 
 #include "hardware.h"
 #include "uart.h"
@@ -38,15 +43,15 @@ U8 data				=0;
 void cPMainCmdParser(void)
 {
 
-	if(uartGetRxSize())
+	if(uartGetRxSize())		//if uart fifo not empty
 	{
 		data=uartGetByte();
-		uartSendByte(data);
+		uartSendByte(data);		//acknowlegde by sending the received byte
  	  	switch(cPState)
  		{
-	 		case CP_SYNC_STATE:
+	 		case CP_SYNC_STATE:		
 
-				if(data==CP_CMD_NORMALE||data==CP_CMD_ARRET)
+				if(data==CP_CMD_NORMALE||data==CP_CMD_ARRET)	//if known command type
 				{			
 					cPCmdValue=data;
 					cPState=CP_GET_VITESSE_STATE;
@@ -54,35 +59,35 @@ void cPMainCmdParser(void)
 
 			break;
 
-			case CP_GET_VITESSE_STATE:
+			case CP_GET_VITESSE_STATE:							//get speed byte
 				cPVitesseValue=data;
 				cPState=CP_GET_ANGLE_STATE;			
 
 			break;
 
 
-			case CP_GET_ANGLE_STATE:
+			case CP_GET_ANGLE_STATE:							//get angle byte	
 
 				cPAngleValue=data;
 				
 
 				if(cPCmdValue==CP_CMD_NORMALE)
-					cPState=CP_RUN_STATE;
+					cPState=CP_RUN_STATE;						//normal mode
 				else
-					cPState=CP_ARRET_STATE;
+					cPState=CP_ARRET_STATE;						//emergency stop
 			break;
 
-			case CP_ARRET_STATE:
+			case CP_ARRET_STATE:								//emergency stop
 
 				cPState=CP_SYNC_STATE;
 				(void)moteurControl(cPVitesseValue,cPAngleValue,M_ARRET);
 
 			break;
 
-			case CP_RUN_STATE:
+			case CP_RUN_STATE:									//normal mode
 
 				cPState=CP_SYNC_STATE;
-				(void)moteurControl(cPVitesseValue,cPAngleValue,M_MARCHE);
+				(void)moteurControl(cPVitesseValue,cPAngleValue,M_MARCHE);	//controls motor according to received command
 
 			break;
 

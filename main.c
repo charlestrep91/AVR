@@ -15,6 +15,7 @@
 #include "moteur.h"
 #include "SwNLed.h"
 #include "Watchdog.h"
+#include "i2c2.h"
 
 volatile U8 flag5ms=0;
 U8 count5ms=0;
@@ -25,44 +26,24 @@ int main( void )
 	cli();	
 	//INITS				
 	hwInit();
-	uartInit();
+//	uartInit();
 	pwmInit();	
-	adcInit();
-<<<<<<< .merge_file_a15164
-<<<<<<< HEAD
+//	adcInit();
 //	WdInit();
 //	WdDisable();
-=======
-	
->>>>>>> origin/master
-=======
-	
->>>>>>> .merge_file_a16876
-	
 	adcStartConversion();
 	//enable interrupt
+	Init_TWI();
 	sei();
 	//calibration des vitesses
-	adcCalibSeq();
+//	adcCalibSeq();
 	//attend que la sw Start soit appuyer 
 	//pour lancer le reste du programme	
 	SLWaitForTheStartSw();
 
 //	WD_RESTART_WATCHDOG;
-<<<<<<< .merge_file_a15164
-<<<<<<< HEAD
-=======
-//	WdInit();
-
->>>>>>> origin/master
-=======
-//	WdInit();
-
->>>>>>> .merge_file_a16876
 	
 	
-	
-
 	while(1)
 	{
 		if(flag5ms)
@@ -78,6 +59,4 @@ int main( void )
 		cPMainCmdParser(); //Machine à état communication
 		CalculMoteur();	   //calculPWM et autre			
 	}
-
-
 }

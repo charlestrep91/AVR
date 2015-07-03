@@ -1,11 +1,13 @@
+///////////////////////////////////////////////////////////////////////////
 /*
- ELE542 
+	SwNLed.c
+ 	ELE542 - ÉTÉ2015
+ 	Jonathan Lapointe LAPJ05108303
+ 	Charles Trépanier TREC07029107
 
- Jonathan Lapointe LAPJ05108303
- Charles Trépanier 
-
-
+	Contains functions related to the STK500's switches and LEDs.
 */
+///////////////////////////////////////////////////////////////////////////
 
 #include "hardware.h"
 #include "SwNLed.h"
@@ -17,7 +19,7 @@
 #define   LED_COM_STATUS  0x02
 #define   SW_STOP_THE_MOTORS 0xcc
 
-void SLWaitForTheStartSw(void)
+void SLWaitForTheStartSw(void)		//blocks code until SW6 is pressed
 {
 	cli();
 	PORTB|=LED_RUN_LED;
@@ -31,8 +33,7 @@ void SLWaitForTheStartSw(void)
 	
 }
 
-void SLCheckSwStatus(void)
-{
+void SLCheckSwStatus(void)			//polls SW6 and blocks or resumes code
 	if((PINA&SW_STOP_MSK)==0)
 	{
 		cli();

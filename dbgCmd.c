@@ -1,11 +1,13 @@
+///////////////////////////////////////////////////////////////////////////
 /*
- ELE542 
+	dbgCmd.c
+ 	ELE542 - ÉTÉ2015
+ 	Jonathan Lapointe LAPJ05108303
+ 	Charles Trépanier TREC07029107
 
- Jonathan Lapointe LAPJ05108303
- Charles Trépanier 
-
-
+	Contains functions for sending debug information to the console.
 */
+///////////////////////////////////////////////////////////////////////////
 
 
 #include "dbgCmd.h"
@@ -15,7 +17,7 @@
 
 
 
-
+//Sends a debug string to the console
 void dbgSendDbgString(U8 *buf)
 {	
 //		uartSetSendByteEnable(0);
@@ -27,6 +29,7 @@ void dbgSendDbgString(U8 *buf)
 		uartSendByte(0xFF);
 }
 
+//Converts a decimal value to an ascii string and send it to the debug console
 void dbgSendDbgU16ToDec(U8 *buf,U16 value)
 {
 	U8 buffer[5]={0x30,0x30,0x30,0x30,0x30};
@@ -45,6 +48,7 @@ void dbgSendDbgU16ToDec(U8 *buf,U16 value)
 
 }
 
+//Sends a debug string to the console with a header
 void dbgSendRobotString(U8 *buf)
 {	
 	//	uartSetSendByteEnable(0);

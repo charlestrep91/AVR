@@ -1,11 +1,15 @@
+///////////////////////////////////////////////////////////////////////////
 /*
- ELE542 
+	adc.c
+ 	ELE542 - ÉTÉ2015
+ 	Jonathan Lapointe LAPJ05108303
+ 	Charles Trépanier TREC07029107
 
- Jonathan Lapointe LAPJ05108303
- Charles Trépanier 
-
-
+	Contains the ISR and the functions used to process motor speed values 
+	read from the MCU's ADC.
 */
+///////////////////////////////////////////////////////////////////////////
+
 #include "adc.h"
 #include "moteur.h"
 #include "uart.h"
@@ -53,7 +57,7 @@ void adcReadCalibValue(S32 *adcValD,S32 *adcValG);
 	@fn adcInit(void)
 	@des init du peripherique adc
 */
-void adcInit(void)
+void adcInit(void)		//initialize ADC module 
 {
     
 	ADMUX=ADC_MOTEUR_DROIT;	
@@ -75,7 +79,7 @@ void adcInit(void)
 	@fn void adcStartConversion(void)
 	@des demarre les lectures
 */
-void adcStartConversion(void)
+void adcStartConversion(void)	//start initial conversion
 {
    ADCSRA |= 1<<ADSC;
 }
@@ -85,7 +89,7 @@ void adcStartConversion(void)
 	@fn ISR(ADC_vect)
 	@des routine d'interruption
 */
-ISR(ADC_vect)
+ISR(ADC_vect)		//ADC interrupt sub routine
 {
 	ADMUX = (ADMUX & 0x01) ? (0x00) : (0x01);
 	if(ADMUX&0x01)
@@ -105,6 +109,8 @@ ISR(ADC_vect)
 
 }
 
+
+//calculates right and left average motor speeds
 void adcCalculateAvg(float * moteurD, float * moteurG)
 {
 	
@@ -119,6 +125,7 @@ void adcCalculateAvg(float * moteurD, float * moteurG)
 
 }
 
+//calculates calibration average values
 void adcReadCalibValue(S32 *adcValD,S32 *adcValG)
 {
 	*adcValD=adcMoteurDAvg/adcNbSamplesD;
@@ -129,6 +136,7 @@ void adcReadCalibValue(S32 *adcValD,S32 *adcValG)
 	adcNbSamplesD=0;
 }
 
+//motors calibration sequence
 void adcCalibSeq(void)
 {
 	tREG08 portDreg;

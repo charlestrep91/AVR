@@ -1,9 +1,13 @@
+///////////////////////////////////////////////////////////////////////////
 /*
- ELE542 
- Jonathan Lapointe LAPJ05108303
- Charles Trépanier 
-*/
+	uart.h
+ 	ELE542 - ÉTÉ2015
+ 	Jonathan Lapointe LAPJ05108303
+ 	Charles Trépanier TREC07029107
 
+	Contains prototypes and definitions for uart.c.
+*/
+///////////////////////////////////////////////////////////////////////////
 
 #ifndef UART_H
 #define UART_H

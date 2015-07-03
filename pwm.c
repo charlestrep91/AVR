@@ -28,8 +28,8 @@ void pwmInit(void)
 
   //ajustement de la periode de 5mS
   ICR1=0x2710;
-  OCR1A=3000;
-  OCR1B=3000;
+  OCR1A=0;
+  OCR1B=0;
 }
 
 void pwmSetDutyValue(U16 valueD,U16 valueG,U8 portValue)

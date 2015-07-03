@@ -8,6 +8,7 @@
 #include "uart.h"
 #include "dbgCmd.h"
 #include "moteur.h"
+#include "Watchdog.h"
 
 #define CP_CMD_NORMALE 0xF1
 #define CP_CMD_ARRET   0xF0
@@ -40,14 +41,13 @@ void cPMainCmdParser(void)
 	if(uartGetRxSize())
 	{
 		data=uartGetByte();
-		uartSendByteCMD(data);
+		uartSendByte(data);
  	  	switch(cPState)
  		{
 	 		case CP_SYNC_STATE:
 
 				if(data==CP_CMD_NORMALE||data==CP_CMD_ARRET)
 				{			
-					//uartSendByteCMD(data);
 					cPCmdValue=data;
 					cPState=CP_GET_VITESSE_STATE;
 				}
@@ -56,7 +56,6 @@ void cPMainCmdParser(void)
 
 			case CP_GET_VITESSE_STATE:
 				cPVitesseValue=data;
-				//uartSendByteCMD(data);
 				cPState=CP_GET_ANGLE_STATE;			
 
 			break;

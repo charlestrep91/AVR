@@ -16,4 +16,5 @@ void hwInit(void)
 	DDRB = 0xff; 
 	DDRD = 0xfe;
 	DDRA = 0x10;
+	PORTB=0xff;
 }

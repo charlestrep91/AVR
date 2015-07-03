@@ -14,7 +14,7 @@
 #define UART_RX_BUFFER_SIZE 60
 #define UART_TX_BUFFER_SIZE 60
 
-//definition utilisé pour la fonction void uartSendString(U8 *buf);	
+//definition utilisée pour la fonction void uartSendString(U8 *buf);	
 #define UART_MAX_SIZE_STRING 	UART_TX_BUFFER_SIZE
 #define UART_END_OF_STRING_CHAR  0
 

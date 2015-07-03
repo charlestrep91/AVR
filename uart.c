@@ -7,6 +7,7 @@
 
 #include "uart.h"
 #include "hardware.h"
+#include "Watchdog.h"
 
 //UART COMMUNICATION SPEED CONFICGURATION
 #ifndef F_CPU
@@ -15,12 +16,13 @@
 
 #define UART_BAUD_RATE      9600      /* 9600 baud */
 #define UART_BAUD_SELECT (F_CPU/(UART_BAUD_RATE*16l)-1)
-
+#define UART_RX_LED   0x02
 //Variables locales
 
 //Variables pour les buffers
 U8 uartRxBuffer[UART_RX_BUFFER_SIZE];
 U8 uartTxBuffer[UART_TX_BUFFER_SIZE];
+
 //pointeurs et compteurs de données FIFOS
 volatile U8 uartRxInPtr;
 volatile U8 uartRxOutPtr;
@@ -74,6 +76,7 @@ void uartTxRoutine(void)
 		UDR = uartTxBuffer[uartTxOutPtr]; 
 		uartTxOutPtr++;
 		uartTxSize--;
+		PORTB|=UART_RX_LED;
 		//remet à zéro si jamais la taille du buffer est dépassé
 		if(uartTxOutPtr>(UART_TX_BUFFER_SIZE-1))
 		{
@@ -96,6 +99,7 @@ void uartRxRoutine(void)
 	uartRxBuffer[uartRxInPtr] = UDR;	
 	uartRxInPtr++;
 	uartRxSize++;
+	PORTB&=~UART_RX_LED;
 	//remet à zéro si jamais la taille du buffer est dépassé
 	if(uartRxInPtr>(UART_RX_BUFFER_SIZE-1))
 			uartRxInPtr=0;
@@ -169,6 +173,7 @@ U8 uartGetByte(void)
 	{
 		uartRxOutPtr=0;
 		uartRxInPtr=0;
+		
 	}
 	return rxByte;		
 
@@ -202,5 +207,6 @@ ISR(USART_TXC_vect)
 ISR(USART_RXC_vect)
 /* signal handler for receive complete interrupt */
 {
-	uartRxRoutine();  
+	uartRxRoutine(); 
+	WD_RESTART_WATCHDOG; 
 }

@@ -27,10 +27,10 @@ void adcInit(void);
 */
 void adcStartConversion(void);
 
-void adcCalculateAvg(void);
+void adcCalculateAvg(float * moteurD, float * moteurG);
 
 
-
+void adcCalibSeq(void);
 
 
 

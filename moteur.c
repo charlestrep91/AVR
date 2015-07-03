@@ -1,8 +1,16 @@
+/*
+ ELE542 
+
+ Jonathan Lapointe LAPJ05108303
+ Charles Trépanier 
+
+
+*/
 #include "moteur.h"
 #include "hardware.h"
 #include "pwm.h"
 #include "dbgCmd.h"
-
+#include "adc.h"
 U8 lastVitesse=0;	
 U8 lastAngle=0;
 S16 lastVitG=0;
@@ -12,7 +20,6 @@ U8 mMode=0;
 U16 dutyValD;
 U16 dutyValG;
 static U8  TobeUpdated=1;
-static U8  counterCMD=0;
 
 float mVitesse_D=0;		//vitesse formattee en float pour envoyer a la fonction CalculPWM
 float mAngle_D=0;		//angle formatte en float pour envoyer a la fonction CalculPWM
@@ -89,7 +96,7 @@ U8 moteurControl(U8 vitesse,U8 angle,U8 mode)
 
 		if(angle!=lastAngle)
 		{
-			mAngle_D=(float)((angle<<1)*Pi)/180;
+			mAngle_D=(float)(angle*0.0349065);
 		}
 
 		lastVitesse=vitesse;
@@ -99,13 +106,6 @@ U8 moteurControl(U8 vitesse,U8 angle,U8 mode)
 	return 0;
 }
 
-void moteurAsservissement(S16 vitG,S16 vitD)
-{
-		mVg=(float)vitG/1023;
-		mVd=(float)vitD/1023;
-		lastVitG=vitG;
-		lastVitD=vitD;
-}
 
 void moteurUpdateDutys(void)
 {
@@ -125,8 +125,7 @@ tREG08 mPortDREG;
 	{
 		//MODE AVANT
 		if(mMode!=M_MARCHE)
-		{
-		
+		{	
 			switch(mMode)
 			{
 				case M_NEUTRE:
@@ -153,6 +152,7 @@ tREG08 mPortDREG;
 		}
 		else
 		{
+			adcCalculateAvg(&mVd,&mVg);
 			CalculPWM(mVitesse_D,mAngle_D,mVg,mVd,&mDuty_G,&mDuty_D);	
 			//MODE ARRIERE
 			if(mDuty_G<0)
@@ -180,22 +180,13 @@ tREG08 mPortDREG;
 			{
 				M_DIR_D1=1;
 				M_DIR_D2=0;	
-			}
-		
+			}	
 			dutyValD=(U16)(mDuty_D*10000);
 			dutyValG=(U16)(mDuty_G*10000);		
 		}
 		pwmSetDutyValue(dutyValD,dutyValG,mPortDREG.byte);
 		TobeUpdated=0;
-	//	counterCMD++;
-		if(counterCMD>200)
-		{
-			dbgSendDbgU16ToDec((U8*)"droit=",dutyValD);
-			dbgSendDbgU16ToDec((U8*)"gauche=",dutyValG);
-			dbgSendDbgU16ToDec((U8*)"adcD=",(U16)lastVitD);
-			dbgSendDbgU16ToDec((U8*)"adcG=",(U16)lastVitG);
-			counterCMD=0;
-		}
+	
 	}
 
 }

@@ -1,4 +1,4 @@
-/*
+ /*
  ELE542 
  Jonathan Lapointe LAPJ05108303
  Charles Trépanier 
@@ -13,31 +13,43 @@
 #include "uart.h"
 #include "adc.h"
 #include "moteur.h"
+#include "SwNLed.h"
+#include "Watchdog.h"
 
 
 
 int main( void )
 {
-	tREG08 portBREG;
-	cli();					//disable interrupts
+	//disable interrupts
+	cli();	
+	//INITS				
 	hwInit();
 	uartInit();
 	pwmInit();	
 	adcInit();
-	portBREG.byte=0xff;
-	portBREG.bit.b0=0;
-	PORTB=portBREG.byte;
-	adcStartConversion();	
-	sei();					//enable interrupts
+	WdInit();
+	WdDisable();
+	
+	adcStartConversion();
+	//enable interrupt
+	sei();
+	//calibration des vitesses
+	adcCalibSeq();
+	//attend que la sw Start soit appuyer 
+	//pour lancer le reste du programme	
+	SLWaitForTheStartSw();
+
+	WD_RESTART_WATCHDOG;
 	
 	
 	
 
 	while(1)
 	{
-		cPMainCmdParser();
-		uartSendData();
-		CalculMoteur();		
+		
+		SLCheckSwStatus(); //verifie la switch d'arret
+		cPMainCmdParser(); //Machine à état communication
+		CalculMoteur();	   //calculPWM et autre			
 	}
 
 

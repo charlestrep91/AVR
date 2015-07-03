@@ -16,7 +16,8 @@
 #include "SwNLed.h"
 #include "Watchdog.h"
 
-
+volatile U8 flag5ms=0;
+U8 count5ms=0;
 
 int main( void )
 {
@@ -27,8 +28,8 @@ int main( void )
 	uartInit();
 	pwmInit();	
 	adcInit();
-	WdInit();
-	WdDisable();
+//	WdInit();
+//	WdDisable();
 	
 	adcStartConversion();
 	//enable interrupt
@@ -39,14 +40,22 @@ int main( void )
 	//pour lancer le reste du programme	
 	SLWaitForTheStartSw();
 
-	WD_RESTART_WATCHDOG;
+//	WD_RESTART_WATCHDOG;
 	
 	
 	
 
 	while(1)
 	{
-		
+		if(flag5ms)
+		{
+			count5ms++;
+			if(count5ms>=10)
+			{
+				count5ms=0;
+				Ping_sensor();
+			}
+		}
 		SLCheckSwStatus(); //verifie la switch d'arret
 		cPMainCmdParser(); //Machine à état communication
 		CalculMoteur();	   //calculPWM et autre			

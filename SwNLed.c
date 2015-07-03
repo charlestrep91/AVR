@@ -36,7 +36,7 @@ void SLCheckSwStatus(void)
 	if((PINA&SW_STOP_MSK)==0)
 	{
 		cli();
-		WdDisable();
+//		WdDisable();
 		PORTB|=LED_RUN_LED;
 		PORTB|=LED_COM_STATUS;
 		PORTB&=~LED_WAIT_LED;	
@@ -46,7 +46,7 @@ void SLCheckSwStatus(void)
 		PORTB|=LED_WAIT_LED;
 		PORTB&=~LED_RUN_LED;
 		sei();
-		WD_RESTART_WATCHDOG;
+//		WD_RESTART_WATCHDOG;
 	}
 
 }

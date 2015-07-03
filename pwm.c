@@ -18,6 +18,8 @@
 U16 period=10000;
 U8 counter=0;
 
+extern flag5ms;
+
 void pwmInit(void)
 {
   //com1b1=1
@@ -49,4 +51,5 @@ ISR(TIMER1_OVF_vect)
 	pwmPortDREG.bit.b5=1;
 	PORTD=pwmPortDREG.byte;	
 	moteurUpdateDutys();
+	flag5ms=1;
 }

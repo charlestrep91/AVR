@@ -27,8 +27,7 @@ int main( void )
 	uartInit();
 	pwmInit();	
 	adcInit();
-	WdInit();
-	WdDisable();
+	
 	
 	adcStartConversion();
 	//enable interrupt
@@ -39,7 +38,9 @@ int main( void )
 	//pour lancer le reste du programme	
 	SLWaitForTheStartSw();
 
-	WD_RESTART_WATCHDOG;
+//	WD_RESTART_WATCHDOG;
+//	WdInit();
+
 	
 	
 	

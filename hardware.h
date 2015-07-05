@@ -32,7 +32,7 @@
 #define U32 long
 #define S32 signed long
 
-#define __DETECTION_COLLISION 
+
 
 typedef union uREG08    /*8 bit register with byte and bit access*/
   {

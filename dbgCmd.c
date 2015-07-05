@@ -51,7 +51,7 @@ void dbgSendRobotString(U8 *buf)
 		//SEND START BYTE
 		uartSendByte(0xFE);
 		//SEND STRINGS
-		uartSendString("Robot: ");
+		uartSendString((U8*)"Robot: ");
 		uartSendString(buf);
 		//SEND END BYTE
 		uartSendByte(0xFF);

@@ -207,6 +207,7 @@ ISR(USART_TXC_vect)
 ISR(USART_RXC_vect)
 /* signal handler for receive complete interrupt */
 {
+//	WdDisable();
 	uartRxRoutine(); 
 //	WD_RESTART_WATCHDOG; 
 }

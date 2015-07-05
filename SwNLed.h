@@ -6,10 +6,11 @@
 
 
 */
-#include "hardware.h"
+
 
 #ifndef SW_N_LED
 #define SW_N_LED
+#include "hardware.h"
 
 
 void SLCheckSwStatus(void);

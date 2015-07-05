@@ -15,12 +15,15 @@
 #include "moteur.h"
 #include "SwNLed.h"
 #include "Watchdog.h"
+#include "twi.h"
+#include "sonar.h"
 
 volatile U8 flag5ms=0;
 U8 count5ms=0;
 
 int main( void )
 {
+
 	//disable interrupts
 	cli();	
 	//INITS				
@@ -28,40 +31,27 @@ int main( void )
 	uartInit();
 	pwmInit();	
 	adcInit();
-<<<<<<< .merge_file_a15164
-<<<<<<< HEAD
-//	WdInit();
-//	WdDisable();
-=======
+	twiInit();
 	
->>>>>>> origin/master
-=======
 	
->>>>>>> .merge_file_a16876
 	
 	adcStartConversion();
 	//enable interrupt
 	sei();
+	cli();
+//	WD_RESTART_WATCHDOG;
+//	WdInit();
 	//calibration des vitesses
 	adcCalibSeq();
+	
 	//attend que la sw Start soit appuyer 
 	//pour lancer le reste du programme	
 	SLWaitForTheStartSw();
-
-//	WD_RESTART_WATCHDOG;
-<<<<<<< .merge_file_a15164
-<<<<<<< HEAD
-=======
-//	WdInit();
-
->>>>>>> origin/master
-=======
-//	WdInit();
-
->>>>>>> .merge_file_a16876
+	SonarInit();
+	SonarAdjPortee(0x22);
 	
 	
-	
+
 
 	while(1)
 	{
@@ -71,7 +61,7 @@ int main( void )
 			if(count5ms>=10)
 			{
 				count5ms=0;
-				Ping_sensor();
+				SonarPing();
 			}
 		}
 		SLCheckSwStatus(); //verifie la switch d'arret

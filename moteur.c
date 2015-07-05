@@ -11,7 +11,8 @@
 #include "pwm.h"
 #include "dbgCmd.h"
 #include "adc.h"
-#include "i2c2.h"
+#include "sonar.h"
+
 U8 lastVitesse=0;	
 U8 lastAngle=0;
 S16 lastVitG=0;
@@ -156,10 +157,7 @@ tREG08 mPortDREG;
 
 			adcCalculateAvg(&mVd,&mVg);	
 			CalculPWM(mVitesse_D,mAngle_D,mVg,mVd,&mDuty_G,&mDuty_D);
-			#ifdef __DETECTION_COLLISION
-			range_sensor(mVg,mVd);
-			Gestion_colision(&mDuty_G, &mDuty_D,&mPortDREG.byte);
-			#endif	
+			SonarCorrectDest(&mDuty_D,&mDuty_G);
 			//MODE ARRIERE
 			if(mDuty_G<0)
 			{

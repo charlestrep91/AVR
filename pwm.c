@@ -12,13 +12,13 @@
 #include "dbgCmd.h"
 #include "moteur.h"
 
- volatile U16 pwmOCR1A_value=0;
- volatile   U16 pwmOCR1B_value=0;
- volatile   tREG08 pwmPortDREG;
+volatile   U16 pwmOCR1A_value=0;
+volatile   U16 pwmOCR1B_value=0;
+volatile   tREG08 pwmPortDREG;
 U16 period=10000;
 U8 counter=0;
 
-extern flag5ms;
+extern U8 flag5ms;
 
 void pwmInit(void)
 {
